@@ -1,0 +1,65 @@
+
+
+import 'package:flutter/material.dart';
+
+import '../constants/fonts.dart';
+import '../constants/style.dart';
+
+class AppTheme {
+
+  static lightTheme() {
+    return ThemeData(
+      scaffoldBackgroundColor: Colors.white,
+      primarySwatch: Colors.blue,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      primaryColor: Style.primaryColor,
+      textTheme: TextTheme(
+        bodyMedium: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          color: Style.lightSubTextColor,
+        ),
+          bodyLarge: TextStyle(
+            fontSize: 34,
+            fontWeight: FontWeight.w400,
+            fontFamily: Fonts.geometr,
+            color: Style.lightSubTextColor,
+          )
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+
+        style: ButtonStyle(
+          shape: WidgetStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+          backgroundColor: WidgetStateProperty.all(Style.primaryColor),
+          foregroundColor: WidgetStateProperty.all(Colors.white), // default white text
+          textStyle: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.pressed)) {
+              return const TextStyle(
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    color: Colors.white,
+                    offset: Offset(0, 0),
+                    blurRadius: 4,
+                  ),
+                ],
+              );
+            }
+            return const TextStyle(
+              color: Colors.white,
+            );
+          }),
+        ),
+      ),
+      buttonTheme: ButtonThemeData(
+        buttonColor: Color(0xff24BAEC),
+
+        textTheme: ButtonTextTheme.primary,
+      ),
+    );
+  }
+}
