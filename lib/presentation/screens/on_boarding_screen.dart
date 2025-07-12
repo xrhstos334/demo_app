@@ -2,8 +2,10 @@ import 'package:demo_app/core/constants/fonts.dart';
 import 'package:demo_app/core/utils/keys/asset_keys.dart';
 import 'package:demo_app/core/utils/size_config.dart';
 import 'package:demo_app/presentation/cubits/on_boarding_cubit/on_boarding_cubit.dart';
+import 'package:demo_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../core/constants/style.dart';
@@ -18,9 +20,15 @@ class OnBoardingScreen extends StatefulWidget {
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   List<String> titlesOnBoardingScreen = [
-    "Life is short and\nthe world is ",
-    "It’s a big world out\nthere go explore",
-    "People don’t take trips,\ntrips take people",
+    "Life is short and the",
+    "It’s a big world out ",
+    "People don’t take trips, ",
+  ];
+
+  List<String> underLineTitles = [
+    "world is ",
+    "there go ",
+    "trips take ",
   ];
 
   List<String> endTitle = [
@@ -33,6 +41,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     "At Friends tours and travel, we customize reliable and trutworthy educational tours to destinations all over the world",
     "To get the best of your adventure you just need to leave and go where you like. we are waiting for you",
     "To get the best of your adventure you just need to leave and go where you like. we are waiting for you",
+  ];
+  List<double> lineSize = [
+    9, 12, 12
   ];
 
   List<String> listImagesOnBoardingScreen = [
@@ -63,8 +74,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           backgroundColor: Colors.white,
           body: Column(
             children: [
-              Expanded(
-                flex: 6,
+              SizedBox(
+                height: SizeConfig.screenHeight * 0.6,
                 child: Stack(
                   children: [
                     PageView.builder(
@@ -128,40 +139,53 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const SizedBox(height: 16),
-                      RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                      Text(  titlesOnBoardingScreen[state.currentPage],
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge
+                            ?.copyWith(
+                          fontSize: 30,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                        ),),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(  underLineTitles[state.currentPage],
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(
+                              fontSize: 30,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                            ),),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                 endTitle[state.currentPage],
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                  color: Style.secondaryColor,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              SvgPicture.asset(
+                                AssetKeys.line,
+                                height: lineSize[state.currentPage],
+                                width: 60,
+                                alignment: Alignment.centerRight,
+                              ),
+                            ],
                           ),
-                          children: [
-                            TextSpan(
-                              text: titlesOnBoardingScreen[state.currentPage],
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    fontSize: 30,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                            ),
-                            TextSpan(
-                              text: endTitle[state.currentPage],
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    color: Style.secondaryColor,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                            ),
-                          ],
-                        ),
+                        ],
                       ),
+
                       const SizedBox(height: 16),
                       Text(
                         textsOnBoardingScreen[state.currentPage],
@@ -224,11 +248,96 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     );
   }
 
-  _listener(BuildContext context, OnBoardingState state) {
-    if (state.status == OnBoardingStatus.skip) {
-      Navigator.pushReplacementNamed(context, '/home');
-    } else if (state.status == OnBoardingStatus.complete) {
-      Navigator.pushReplacementNamed(context, '/home');
+   void _listener(BuildContext context, OnBoardingState state) {
+    if (state.status == OnBoardingStatus.skip || state.status == OnBoardingStatus.complete) {
+      Navigator.pushNamed(context, Routes.loginScreen);
     }
+  }
+}
+
+
+
+class TitleWithUnderline extends StatelessWidget {
+  final String title;
+  final String highlight;
+  final TextStyle? normalStyle;
+  final TextStyle? highlightStyle;
+
+  const TitleWithUnderline({
+    super.key,
+    required this.title,
+    required this.highlight,
+    this.normalStyle,
+    this.highlightStyle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final fullText = title + highlight;
+
+    final normal = normalStyle ??
+        Theme.of(context).textTheme.bodyLarge?.copyWith(
+          fontSize: 30,
+          color: Colors.black,
+          fontWeight: FontWeight.w400,
+        );
+
+    final highlightTextStyle = highlightStyle ??
+        Theme.of(context).textTheme.bodyLarge?.copyWith(
+          fontSize: 30,
+          color: Style.secondaryColor,
+          fontWeight: FontWeight.w400,
+        );
+
+    // Υπολογίζουμε πλάτος του title + highlight
+    final textPainter = TextPainter(
+      text: TextSpan(
+        children: [
+          TextSpan(text: title, style: normal),
+          TextSpan(text: highlight, style: highlightTextStyle),
+        ],
+      ),
+      textDirection: TextDirection.ltr,
+      textAlign: TextAlign.left,
+    )..layout();
+
+    // Βρίσκουμε πού τελειώνει το endTitle
+    final titleWidth = TextPainter(
+      text: TextSpan(text: title, style: normal),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    final offsetX = titleWidth.width;
+
+    return SizedBox(
+      width: textPainter.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(text: title, style: normal),
+                TextSpan(text: highlight, style: highlightTextStyle),
+              ],
+            ),
+          ),
+          SizedBox(height: 4),
+          Stack(
+            children: [
+              Positioned(
+                left: offsetX,
+                child: SvgPicture.asset(
+                  AssetKeys.line,
+                  height: 8,
+                  width: 60,
+                  alignment: Alignment.centerRight,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

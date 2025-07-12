@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(milliseconds: 1200),
     );
     _scaleAnimation = Tween<double>(
-      begin: 0.7,
+      begin: 1.7,
       end: 1.0,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
     _fadeAnimation = Tween<double>(
@@ -87,6 +87,8 @@ class _SplashScreenState extends State<SplashScreen>
                         context,
                       ).textTheme.bodyLarge?.copyWith(color: Colors.white),
                     ),
+                     SizedBox(
+                         height: SizeConfig.screenHeight * 0.02),
                   ],
                 ),
               ),

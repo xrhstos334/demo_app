@@ -1,4 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
+
     <application
         android:label="demo_app"
         android:name="${applicationName}"
@@ -9,6 +14,8 @@
             android:exported="true"
             android:launchMode="singleTop"
             android:taskAffinity=""
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
@@ -31,7 +38,11 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-
+        <service
+            android:name="com.dexterous.flutterlocalnotifications.ForegroundService"
+            android:exported="false"
+            android:stopWithTask="false"/>
+        <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver" />
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
             <intent-filter>
@@ -41,10 +52,6 @@
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
             </intent-filter>
         </receiver>
-        <service
-            android:name="com.dexterous.flutterlocalnotifications.ForegroundService"
-            android:exported="false"
-            android:stopWithTask="false"/>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

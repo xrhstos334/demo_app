@@ -23,7 +23,7 @@ class AppTheme {
             fontSize: 34,
             fontWeight: FontWeight.w400,
             fontFamily: Fonts.geometr,
-            color: Style.lightSubTextColor,
+            color: Style.lightTextColor,
           )
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(

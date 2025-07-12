@@ -26,19 +26,6 @@ mixin _$OnBoardingState {
           this as OnBoardingState, _$identity);
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is OnBoardingState &&
-            (identical(other.currentPage, currentPage) ||
-                other.currentPage == currentPage) &&
-            (identical(other.status, status) || other.status == status));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, currentPage, status);
-
-  @override
   String toString() {
     return 'OnBoardingState(currentPage: $currentPage, status: $status)';
   }
@@ -257,19 +244,6 @@ class _OnBoardingState implements OnBoardingState {
   @pragma('vm:prefer-inline')
   _$OnBoardingStateCopyWith<_OnBoardingState> get copyWith =>
       __$OnBoardingStateCopyWithImpl<_OnBoardingState>(this, _$identity);
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _OnBoardingState &&
-            (identical(other.currentPage, currentPage) ||
-                other.currentPage == currentPage) &&
-            (identical(other.status, status) || other.status == status));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, currentPage, status);
 
   @override
   String toString() {

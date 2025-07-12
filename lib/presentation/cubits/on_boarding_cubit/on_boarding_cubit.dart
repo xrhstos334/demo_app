@@ -8,11 +8,16 @@ class OnBoardingCubit extends Cubit<OnBoardingState> {
   OnBoardingCubit() : super(OnBoardingState.initial());
 
   void changePage() {
-    emit(state.copyWith(currentPage: incrementPageNumber));
+    emit(
+        state.copyWith(currentPage: incrementPageNumber,
+          status: state.currentPage == 2
+              ? OnBoardingStatus.complete
+              : OnBoardingStatus.initial,
+    ));
   }
 
   void skip() {
-    emit(state.copyWith(currentPage: 3)); // Assuming 3 is the last page
+    emit(state.copyWith(status: OnBoardingStatus.skip));
   }
 
   int get incrementPageNumber {

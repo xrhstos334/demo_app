@@ -2,16 +2,20 @@ import 'package:demo_app/core/theme/app_theme.dart';
 import 'package:demo_app/routes/routes.dart';
 import 'package:demo_app/routes/routes_generator.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import 'core/utils/local_notifications.dart';
 
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  // SystemChrome.setSystemUIOverlayStyle(
-  //   const SystemUiOverlayStyle(
-  //     statusBarColor: Colors.transparent,
-  //     statusBarIconBrightness: Brightness.dark,
-  //     statusBarBrightness: Brightness.light,
-  //   ),
-  // );
+
+  await notificationPlugin.init();
+
+  // Request notification permissions
+  if (await Permission.notification.isDenied) {
+    await Permission.notification.request();
+  }
+
   runApp(const DemoApp());
 }
 

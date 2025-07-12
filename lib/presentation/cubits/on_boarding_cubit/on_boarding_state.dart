@@ -1,6 +1,6 @@
 part of 'on_boarding_cubit.dart';
 
-@freezed
+@Freezed(equal: false)
 abstract class OnBoardingState with _$OnBoardingState {
   const factory OnBoardingState({
     @Default(0) int currentPage,

@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.demo_app"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
     ndkVersion = "27.0.12077973"
 
     compileOptions {
@@ -23,7 +23,7 @@ android {
     defaultConfig {
         applicationId = "com.example.demo_app"
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -42,5 +42,7 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    implementation("androidx.window:window:1.0.0")
+    implementation("androidx.window:window-java:1.0.0")
 
 }
