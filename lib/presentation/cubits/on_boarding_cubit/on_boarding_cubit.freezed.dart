@@ -16,6 +16,10 @@ T _$identity<T>(T value) => value;
 mixin _$OnBoardingState {
   int get currentPage;
   OnBoardingStatus get status;
+  List<dynamic> get images;
+  List<dynamic> get titles;
+  List<dynamic> get descriptions;
+  List<dynamic> get highlight;
 
   /// Create a copy of OnBoardingState
   /// with the given fields replaced by the non-null parameter values.
@@ -27,7 +31,7 @@ mixin _$OnBoardingState {
 
   @override
   String toString() {
-    return 'OnBoardingState(currentPage: $currentPage, status: $status)';
+    return 'OnBoardingState(currentPage: $currentPage, status: $status, images: $images, titles: $titles, descriptions: $descriptions, highlight: $highlight)';
   }
 }
 
@@ -37,7 +41,13 @@ abstract mixin class $OnBoardingStateCopyWith<$Res> {
           OnBoardingState value, $Res Function(OnBoardingState) _then) =
       _$OnBoardingStateCopyWithImpl;
   @useResult
-  $Res call({int currentPage, OnBoardingStatus status});
+  $Res call(
+      {int currentPage,
+      OnBoardingStatus status,
+      List<dynamic> images,
+      List<dynamic> titles,
+      List<dynamic> descriptions,
+      List<dynamic> highlight});
 }
 
 /// @nodoc
@@ -55,6 +65,10 @@ class _$OnBoardingStateCopyWithImpl<$Res>
   $Res call({
     Object? currentPage = null,
     Object? status = null,
+    Object? images = null,
+    Object? titles = null,
+    Object? descriptions = null,
+    Object? highlight = null,
   }) {
     return _then(_self.copyWith(
       currentPage: null == currentPage
@@ -65,6 +79,22 @@ class _$OnBoardingStateCopyWithImpl<$Res>
           ? _self.status
           : status // ignore: cast_nullable_to_non_nullable
               as OnBoardingStatus,
+      images: null == images
+          ? _self.images
+          : images // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>,
+      titles: null == titles
+          ? _self.titles
+          : titles // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>,
+      descriptions: null == descriptions
+          ? _self.descriptions
+          : descriptions // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>,
+      highlight: null == highlight
+          ? _self.highlight
+          : highlight // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>,
     ));
   }
 }
@@ -162,13 +192,21 @@ extension OnBoardingStatePatterns on OnBoardingState {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(int currentPage, OnBoardingStatus status)? $default, {
+    TResult Function(
+            int currentPage,
+            OnBoardingStatus status,
+            List<dynamic> images,
+            List<dynamic> titles,
+            List<dynamic> descriptions,
+            List<dynamic> highlight)?
+        $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _OnBoardingState() when $default != null:
-        return $default(_that.currentPage, _that.status);
+        return $default(_that.currentPage, _that.status, _that.images,
+            _that.titles, _that.descriptions, _that.highlight);
       case _:
         return orElse();
     }
@@ -189,12 +227,20 @@ extension OnBoardingStatePatterns on OnBoardingState {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(int currentPage, OnBoardingStatus status) $default,
+    TResult Function(
+            int currentPage,
+            OnBoardingStatus status,
+            List<dynamic> images,
+            List<dynamic> titles,
+            List<dynamic> descriptions,
+            List<dynamic> highlight)
+        $default,
   ) {
     final _that = this;
     switch (_that) {
       case _OnBoardingState():
-        return $default(_that.currentPage, _that.status);
+        return $default(_that.currentPage, _that.status, _that.images,
+            _that.titles, _that.descriptions, _that.highlight);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -214,12 +260,20 @@ extension OnBoardingStatePatterns on OnBoardingState {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(int currentPage, OnBoardingStatus status)? $default,
+    TResult? Function(
+            int currentPage,
+            OnBoardingStatus status,
+            List<dynamic> images,
+            List<dynamic> titles,
+            List<dynamic> descriptions,
+            List<dynamic> highlight)?
+        $default,
   ) {
     final _that = this;
     switch (_that) {
       case _OnBoardingState() when $default != null:
-        return $default(_that.currentPage, _that.status);
+        return $default(_that.currentPage, _that.status, _that.images,
+            _that.titles, _that.descriptions, _that.highlight);
       case _:
         return null;
     }
@@ -229,13 +283,54 @@ extension OnBoardingStatePatterns on OnBoardingState {
 /// @nodoc
 
 class _OnBoardingState implements OnBoardingState {
-  const _OnBoardingState({this.currentPage = 0, required this.status});
+  const _OnBoardingState(
+      {this.currentPage = 0,
+      required this.status,
+      required final List<dynamic> images,
+      required final List<dynamic> titles,
+      required final List<dynamic> descriptions,
+      required final List<dynamic> highlight})
+      : _images = images,
+        _titles = titles,
+        _descriptions = descriptions,
+        _highlight = highlight;
 
   @override
   @JsonKey()
   final int currentPage;
   @override
   final OnBoardingStatus status;
+  final List<dynamic> _images;
+  @override
+  List<dynamic> get images {
+    if (_images is EqualUnmodifiableListView) return _images;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_images);
+  }
+
+  final List<dynamic> _titles;
+  @override
+  List<dynamic> get titles {
+    if (_titles is EqualUnmodifiableListView) return _titles;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_titles);
+  }
+
+  final List<dynamic> _descriptions;
+  @override
+  List<dynamic> get descriptions {
+    if (_descriptions is EqualUnmodifiableListView) return _descriptions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_descriptions);
+  }
+
+  final List<dynamic> _highlight;
+  @override
+  List<dynamic> get highlight {
+    if (_highlight is EqualUnmodifiableListView) return _highlight;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_highlight);
+  }
 
   /// Create a copy of OnBoardingState
   /// with the given fields replaced by the non-null parameter values.
@@ -247,7 +342,7 @@ class _OnBoardingState implements OnBoardingState {
 
   @override
   String toString() {
-    return 'OnBoardingState(currentPage: $currentPage, status: $status)';
+    return 'OnBoardingState(currentPage: $currentPage, status: $status, images: $images, titles: $titles, descriptions: $descriptions, highlight: $highlight)';
   }
 }
 
@@ -259,7 +354,13 @@ abstract mixin class _$OnBoardingStateCopyWith<$Res>
       __$OnBoardingStateCopyWithImpl;
   @override
   @useResult
-  $Res call({int currentPage, OnBoardingStatus status});
+  $Res call(
+      {int currentPage,
+      OnBoardingStatus status,
+      List<dynamic> images,
+      List<dynamic> titles,
+      List<dynamic> descriptions,
+      List<dynamic> highlight});
 }
 
 /// @nodoc
@@ -277,6 +378,10 @@ class __$OnBoardingStateCopyWithImpl<$Res>
   $Res call({
     Object? currentPage = null,
     Object? status = null,
+    Object? images = null,
+    Object? titles = null,
+    Object? descriptions = null,
+    Object? highlight = null,
   }) {
     return _then(_OnBoardingState(
       currentPage: null == currentPage
@@ -287,6 +392,22 @@ class __$OnBoardingStateCopyWithImpl<$Res>
           ? _self.status
           : status // ignore: cast_nullable_to_non_nullable
               as OnBoardingStatus,
+      images: null == images
+          ? _self._images
+          : images // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>,
+      titles: null == titles
+          ? _self._titles
+          : titles // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>,
+      descriptions: null == descriptions
+          ? _self._descriptions
+          : descriptions // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>,
+      highlight: null == highlight
+          ? _self._highlight
+          : highlight // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>,
     ));
   }
 }

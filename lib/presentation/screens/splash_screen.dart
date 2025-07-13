@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:demo_app/core/utils/keys/asset_keys.dart';
 import 'package:demo_app/presentation/cubits/splash_cubit/splash_cubit.dart';
 import 'package:flutter/material.dart';
@@ -54,14 +56,7 @@ class _SplashScreenState extends State<SplashScreen>
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: BlocListener<SplashCubit, SplashState>(
-        listener: (context, state) {
-          state.when(
-            initial: () {},
-            loaded: () {
-              Navigator.pushReplacementNamed(context, Routes.onBoardingScreen);
-            },
-          );
-        },
+        listener: _listener,
         child: Scaffold(
           backgroundColor: Theme.of(context).primaryColor,
           body: Padding(
@@ -87,8 +82,7 @@ class _SplashScreenState extends State<SplashScreen>
                         context,
                       ).textTheme.bodyLarge?.copyWith(color: Colors.white),
                     ),
-                     SizedBox(
-                         height: SizeConfig.screenHeight * 0.02),
+                    SizedBox(height: SizeConfig.screenHeight * 0.02),
                   ],
                 ),
               ),
@@ -96,6 +90,70 @@ class _SplashScreenState extends State<SplashScreen>
           ),
         ),
       ),
+    );
+  }
+
+  _listener(BuildContext viewContext, SplashState state) {
+    state.when(
+      initial: () {},
+      loaded: (data) async {
+        if (data['args'].isNotEmpty && data['images'].isNotEmpty) {
+          for (final url in data['images']) {
+            await precacheImage(NetworkImage(url), context);
+          }
+          Navigator.pushReplacementNamed(
+            context,
+            Routes.onBoardingScreen,
+            arguments: {
+              "args": data['args'],
+              "images": data['images'],
+            },
+          );
+        } else {
+          showDialog(
+            context: viewContext,
+            barrierDismissible: false,
+            builder: (context) => AlertDialog(
+              title: Text("No Internet connection" ,style:  Theme.of(context)
+                  .textTheme
+                  .bodyLarge?.copyWith(
+                fontSize: 20,
+                color: Style.primaryColor
+              )),
+              content: Text(
+                  "Your app is not connected to the internet. Please check your internet connection and try again.",
+              style: Theme.of(context).textTheme.bodyMedium,),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(viewContext).pop();
+                    viewContext.read<SplashCubit>().initialize();
+                  },
+                  child: Text("Try Again",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge?.copyWith(
+                          fontSize: 20,
+                          color: Style.primaryColor
+                      )),
+                ),
+                TextButton(
+                  onPressed: () {
+                    exit(0);
+                  },
+                  child: Text("Exit",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge?.copyWith(
+                          fontSize: 20,
+                          color: Style.primaryColor
+                      )),
+                ),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 }

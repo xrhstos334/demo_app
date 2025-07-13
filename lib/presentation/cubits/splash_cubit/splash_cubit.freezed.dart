@@ -15,15 +15,6 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SplashState {
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is SplashState);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
   String toString() {
     return 'SplashState()';
   }
@@ -137,7 +128,7 @@ extension SplashStatePatterns on SplashState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function()? loaded,
+    TResult Function(Map<String, dynamic> args)? loaded,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -145,7 +136,7 @@ extension SplashStatePatterns on SplashState {
       case _Initial() when initial != null:
         return initial();
       case _Loaded() when loaded != null:
-        return loaded();
+        return loaded(_that.args);
       case _:
         return orElse();
     }
@@ -167,14 +158,14 @@ extension SplashStatePatterns on SplashState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function() loaded,
+    required TResult Function(Map<String, dynamic> args) loaded,
   }) {
     final _that = this;
     switch (_that) {
       case _Initial():
         return initial();
       case _Loaded():
-        return loaded();
+        return loaded(_that.args);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -195,14 +186,14 @@ extension SplashStatePatterns on SplashState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
-    TResult? Function()? loaded,
+    TResult? Function(Map<String, dynamic> args)? loaded,
   }) {
     final _that = this;
     switch (_that) {
       case _Initial() when initial != null:
         return initial();
       case _Loaded() when loaded != null:
-        return loaded();
+        return loaded(_that.args);
       case _:
         return null;
     }
@@ -215,15 +206,6 @@ class _Initial implements SplashState {
   const _Initial();
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
   String toString() {
     return 'SplashState.initial()';
   }
@@ -232,20 +214,56 @@ class _Initial implements SplashState {
 /// @nodoc
 
 class _Loaded implements SplashState {
-  const _Loaded();
+  const _Loaded(final Map<String, dynamic> args) : _args = args;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loaded);
+  final Map<String, dynamic> _args;
+  Map<String, dynamic> get args {
+    if (_args is EqualUnmodifiableMapView) return _args;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_args);
   }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
+  /// Create a copy of SplashState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$LoadedCopyWith<_Loaded> get copyWith =>
+      __$LoadedCopyWithImpl<_Loaded>(this, _$identity);
 
   @override
   String toString() {
-    return 'SplashState.loaded()';
+    return 'SplashState.loaded(args: $args)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$LoadedCopyWith<$Res>
+    implements $SplashStateCopyWith<$Res> {
+  factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) =
+      __$LoadedCopyWithImpl;
+  @useResult
+  $Res call({Map<String, dynamic> args});
+}
+
+/// @nodoc
+class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
+  __$LoadedCopyWithImpl(this._self, this._then);
+
+  final _Loaded _self;
+  final $Res Function(_Loaded) _then;
+
+  /// Create a copy of SplashState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? args = null,
+  }) {
+    return _then(_Loaded(
+      null == args
+          ? _self._args
+          : args // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
+    ));
   }
 }
 

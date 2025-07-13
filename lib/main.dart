@@ -4,18 +4,26 @@ import 'package:demo_app/routes/routes_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'core/di/locator.dart';
+import 'firebase_options.dart';
+
 import 'core/utils/local_notifications.dart';
 
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
 
-  await notificationPlugin.init();
 
-  // Request notification permissions
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  setupLocator();
+
+
   if (await Permission.notification.isDenied) {
     await Permission.notification.request();
   }
-
+  await notificationPlugin.init();
   runApp(const DemoApp());
 }
 

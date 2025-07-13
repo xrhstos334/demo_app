@@ -1,3 +1,5 @@
+import 'package:demo_app/core/di/locator.dart';
+import 'package:demo_app/core/services/repository_service.dart';
 import 'package:demo_app/presentation/blocs/login_bloc.dart';
 import 'package:demo_app/presentation/cubits/on_boarding_cubit/on_boarding_cubit.dart';
 import 'package:demo_app/presentation/cubits/splash_cubit/splash_cubit.dart';
@@ -19,26 +21,32 @@ class RouteGenerator {
       case Routes.splashScreen:
         return MaterialPageRoute(
           builder: (_) => BlocProvider<SplashCubit>(
-            create: (context) => SplashCubit(),
+            create: (context) => SplashCubit(
+              onBoardingRepository:
+                  getIt<RepositoryService>().onBoardingRepository,
+            ),
             child: const SplashScreen(),
           ),
         );
       case Routes.onBoardingScreen:
         return MaterialPageRoute(
             builder: (_) => BlocProvider<OnBoardingCubit>(
-                create: (context) => OnBoardingCubit(),
+                create: (context) => OnBoardingCubit(
+                      args: settings.arguments as Map<String, dynamic>,
+                    ),
                 child: const OnBoardingScreen()));
       case Routes.loginScreen:
         return MaterialPageRoute(
             builder: (_) => BlocProvider<LoginBloc>(
-                create: (context) => LoginBloc(),
-                child: const LoginScreen()));
-
+                create: (context) => LoginBloc(), child: const LoginScreen()));
 
       default:
         return MaterialPageRoute(
           builder: (_) => BlocProvider<SplashCubit>(
-            create: (context) => SplashCubit(),
+            create: (context) => SplashCubit(
+              onBoardingRepository:
+                  getIt<RepositoryService>().onBoardingRepository,
+            ),
             child: const SplashScreen(),
           ),
         );

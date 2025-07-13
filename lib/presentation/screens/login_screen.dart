@@ -7,7 +7,6 @@ import 'package:flutter_svg/svg.dart';
 import '../../core/constants/fonts.dart';
 import '../../core/constants/style.dart';
 import '../../core/utils/keys/asset_keys.dart';
-import '../../core/utils/local_notifications.dart';
 import '../blocs/login_bloc.dart';
 import '../widgets/common_text_form_field.dart';
 
@@ -31,11 +30,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    notificationPlugin.showNotification(
-      12345,
-      "Hello",
-      "world",
-      "Notification work",);
     super.initState();
   }
 
