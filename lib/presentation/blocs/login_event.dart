@@ -14,4 +14,7 @@ class LoginEvent with _$LoginEvent {
   const factory LoginEvent.connectWithInstagram() = _ConnectWithGoogle;
   const factory LoginEvent.connectWithTwitter() = _ConnectWithTwitter;
 
+  const factory LoginEvent.connected() = _Connected;
+  const factory LoginEvent.connectionFailed() = _ConnectionFailed;
+
 }

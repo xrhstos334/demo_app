@@ -3,12 +3,12 @@ part of 'login_bloc.dart';
 @freezed
 abstract class LoginState with _$LoginState {
   factory LoginState.initial() => LoginState(
-  loginStatus: LoginStatus.initial,
+  loginStatus: LoginStatusView.initial,
 
   );
 
   const factory LoginState({
-    required LoginStatus loginStatus,
+    required LoginStatusView loginStatus,
     @Default('') String errorMessage,
     @Default(true) bool togglePasswordVisibility,
     @Default('') String username,
@@ -17,7 +17,7 @@ abstract class LoginState with _$LoginState {
 }
 
 
-enum LoginStatus {
+enum LoginStatusView {
   initial,
   loginWaiting,
   loginSuccess,

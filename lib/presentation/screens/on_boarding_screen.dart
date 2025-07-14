@@ -44,184 +44,188 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           backgroundColor: Colors.white,
           body: state.status == OnBoardingStatus.loading
               ? SizedBox()
-              : Column(
-                  children: [
-                    SizedBox(
-                      height: SizeConfig.screenHeight * 0.6,
-                      child: Stack(
-                        children: [
-                          state.status == OnBoardingStatus.loading
-                              ? SizedBox()
-                              : PageView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  controller: _pageController,
-                                  itemCount: 3,
-                                  onPageChanged: (int index) {
-                                    context
-                                        .read<OnBoardingCubit>()
-                                        .incrementPageNumber;
-                                  },
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return ClipRRect(
-                                      borderRadius: const BorderRadius.only(
-                                        bottomLeft: Radius.circular(32),
-                                        bottomRight: Radius.circular(32),
-                                      ),
-                                      child: AnimatedSwitcher(
-                                        duration:
-                                            const Duration(milliseconds: 500),
-                                        transitionBuilder: (Widget child,
-                                            Animation<double> animation) {
-                                          return FadeTransition(
-                                            opacity: animation,
-                                            child: child,
-                                          );
-                                        },
-                                        child: Image.network(
-                                          state.images[index],
-                                          key: ValueKey<String>(
-                                            state.images[index],
-                                          ),
-                                          fit: BoxFit.cover,
-                                          width: double.infinity,
-                                          height: double.infinity,
+              : SingleChildScrollView(
+                child: Column(
+                    children: [
+                      SizedBox(
+                        height: SizeConfig.screenHeight * 0.6,
+                        child: Stack(
+                          children: [
+                            state.status == OnBoardingStatus.loading
+                                ? SizedBox()
+                                : PageView.builder(
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    controller: _pageController,
+                                    itemCount: 3,
+                                    onPageChanged: (int index) {
+                                      context
+                                          .read<OnBoardingCubit>()
+                                          .incrementPageNumber;
+                                    },
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                          bottomLeft: Radius.circular(32),
+                                          bottomRight: Radius.circular(32),
                                         ),
-                                      ),
-                                    );
-                                  },
+                                        child: AnimatedSwitcher(
+                                          duration:
+                                              const Duration(milliseconds: 500),
+                                          transitionBuilder: (Widget child,
+                                              Animation<double> animation) {
+                                            return FadeTransition(
+                                              opacity: animation,
+                                              child: child,
+                                            );
+                                          },
+                                          child: Image.network(
+                                            state.images[index],
+                                            key: ValueKey<String>(
+                                              state.images[index],
+                                            ),
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                            Positioned(
+                              top: SizeConfig.screenHeight * 0.05,
+                              right: SizeConfig.screenWidth * 0.05,
+                              child: TextButton(
+                                onPressed: () {
+                                  context.read<OnBoardingCubit>().skip();
+                                },
+                                child: Text(
+                                  "Skip",
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                 ),
-                          Positioned(
-                            top: SizeConfig.screenHeight * 0.05,
-                            right: SizeConfig.screenWidth * 0.05,
-                            child: TextButton(
-                              onPressed: () {
-                                context.read<OnBoardingCubit>().skip();
-                              },
-                              child: Text(
-                                "Skip",
-                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
 
-                    // Content
-                    Expanded(
-                      flex: 4,
-                      child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24.0,
-                            vertical: 16,
-                          ),
-                          child: Column(
-                            children: [
-                              RichText(
-                                textAlign: TextAlign.center,
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: state.titles[state.currentPage],
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.copyWith(
-                                            fontSize: 30,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
+                      // Content
+                      SizedBox(
+                        height: SizeConfig.screenHeight * 0.4,
+                        child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24.0,
+                              vertical: 16,
+                            ),
+                            child: Column(
+                              children: [
+                                RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: state.titles[state.currentPage],
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.copyWith(
+                                              fontSize: 30,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                      ),
+                                      WidgetSpan(
+                                        alignment: PlaceholderAlignment.baseline,
+                                        baseline: TextBaseline.alphabetic,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              state.highlight[state.currentPage],
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge
+                                                  ?.copyWith(
+                                                    fontSize: 30,
+                                                    color: Style.secondaryColor,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                            ),
+                                            SvgPicture.asset(
+                                              AssetKeys.line,
+                                              height: 6,
+                                              width: 60,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                Flexible(
+                                  child: Text(
+                                    state.descriptions[state.currentPage],
+                                    textAlign: TextAlign.center,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          fontFamily: Fonts.gilSans,
+                                        ),
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                AnimatedSmoothIndicator(
+                                  activeIndex: state.currentPage,
+                                  duration: const Duration(milliseconds: 500),
+                                  count: 3,
+                                  effect: ExpandingDotsEffect(
+                                    expansionFactor: 4,
+                                    dotWidth: 8.0,
+                                    dotHeight: 8.0,
+                                    strokeWidth: 1,
+                                    activeDotColor: Style.primaryColor,
+                                    dotColor:
+                                        Style.primaryColor.withValues(alpha: 0.5),
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      context
+                                          .read<OnBoardingCubit>()
+                                          .changePage();
+                                      if (state.currentPage < state.titles.length) {
+                                        _pageController.animateToPage(
+                                          state.currentPage + 1,
+                                          duration:
+                                              const Duration(milliseconds: 500),
+                                          curve: Curves.easeInOut,
+                                        );
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16),
                                     ),
-                                    WidgetSpan(
-                                      alignment: PlaceholderAlignment.baseline,
-                                      baseline: TextBaseline.alphabetic,
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            state.highlight[state.currentPage],
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge
-                                                ?.copyWith(
-                                                  fontSize: 30,
-                                                  color: Style.secondaryColor,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                          ),
-                                          SvgPicture.asset(
-                                            AssetKeys.line,
-                                            height: 6,
-                                            width: 60,
-                                          ),
-                                        ],
+                                    child: const Text(
+                                      "Get Started",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                state.descriptions[state.currentPage],
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(
-                                      fontFamily: Fonts.gilSans,
-                                    ),
-                              ),
-                              const SizedBox(height: 24),
-                              AnimatedSmoothIndicator(
-                                activeIndex: state.currentPage,
-                                duration: const Duration(milliseconds: 500),
-                                count: 3,
-                                effect: ExpandingDotsEffect(
-                                  expansionFactor: 4,
-                                  dotWidth: 8.0,
-                                  dotHeight: 8.0,
-                                  strokeWidth: 1,
-                                  activeDotColor: Style.primaryColor,
-                                  dotColor:
-                                      Style.primaryColor.withValues(alpha: 0.5),
-                                ),
-                              ),
-                              const SizedBox(height: 24),
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    context
-                                        .read<OnBoardingCubit>()
-                                        .changePage();
-                                    if (state.currentPage < state.titles.length) {
-                                      _pageController.animateToPage(
-                                        state.currentPage + 1,
-                                        duration:
-                                            const Duration(milliseconds: 500),
-                                        curve: Curves.easeInOut,
-                                      );
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16),
-                                  ),
-                                  child: const Text(
-                                    "Get Started",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          )),
-                    ),
-                  ],
-                ),
+                              ],
+                            )),
+                      ),
+                    ],
+                  ),
+              ),
         );
       },
     );

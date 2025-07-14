@@ -43,3 +43,40 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+build/
+
+
+# Android Studio build artifacts
+/android/app/debug/
+/android/app/profile/
+/android/app/release/
+
+# Flutter generated files
+generated_plugin_registrant.dart
+
+# Flutter web build
+/web/build/
+
+# CocoaPods dependencies
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework/
+ios/Flutter/Flutter.podspec
+ios/ServiceDefinitions.json
+
+# Xcode build folders
+ios/Flutter/Flutter.xcworkspace/
+ios/Runner.xcworkspace/
+ios/Runner.xcodeproj/project.xcworkspace/
+
+# Android local properties (keeps local sdk path)
+android/local.properties
+
+# Crashlytics build files
+crashlytics-build.properties
+
+# Lock files
+pubspec.lock
+
+*.freezed.dart

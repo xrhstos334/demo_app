@@ -58,6 +58,8 @@ extension LoginEventPatterns on LoginEvent {
     TResult Function(_ConnectWithFacebook value)? connectWithFacebook,
     TResult Function(_ConnectWithGoogle value)? connectWithInstagram,
     TResult Function(_ConnectWithTwitter value)? connectWithTwitter,
+    TResult Function(_Connected value)? connected,
+    TResult Function(_ConnectionFailed value)? connectionFailed,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -78,6 +80,10 @@ extension LoginEventPatterns on LoginEvent {
         return connectWithInstagram(_that);
       case _ConnectWithTwitter() when connectWithTwitter != null:
         return connectWithTwitter(_that);
+      case _Connected() when connected != null:
+        return connected(_that);
+      case _ConnectionFailed() when connectionFailed != null:
+        return connectionFailed(_that);
       case _:
         return orElse();
     }
@@ -107,6 +113,8 @@ extension LoginEventPatterns on LoginEvent {
     required TResult Function(_ConnectWithFacebook value) connectWithFacebook,
     required TResult Function(_ConnectWithGoogle value) connectWithInstagram,
     required TResult Function(_ConnectWithTwitter value) connectWithTwitter,
+    required TResult Function(_Connected value) connected,
+    required TResult Function(_ConnectionFailed value) connectionFailed,
   }) {
     final _that = this;
     switch (_that) {
@@ -126,6 +134,10 @@ extension LoginEventPatterns on LoginEvent {
         return connectWithInstagram(_that);
       case _ConnectWithTwitter():
         return connectWithTwitter(_that);
+      case _Connected():
+        return connected(_that);
+      case _ConnectionFailed():
+        return connectionFailed(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -154,6 +166,8 @@ extension LoginEventPatterns on LoginEvent {
     TResult? Function(_ConnectWithFacebook value)? connectWithFacebook,
     TResult? Function(_ConnectWithGoogle value)? connectWithInstagram,
     TResult? Function(_ConnectWithTwitter value)? connectWithTwitter,
+    TResult? Function(_Connected value)? connected,
+    TResult? Function(_ConnectionFailed value)? connectionFailed,
   }) {
     final _that = this;
     switch (_that) {
@@ -173,6 +187,10 @@ extension LoginEventPatterns on LoginEvent {
         return connectWithInstagram(_that);
       case _ConnectWithTwitter() when connectWithTwitter != null:
         return connectWithTwitter(_that);
+      case _Connected() when connected != null:
+        return connected(_that);
+      case _ConnectionFailed() when connectionFailed != null:
+        return connectionFailed(_that);
       case _:
         return null;
     }
@@ -200,6 +218,8 @@ extension LoginEventPatterns on LoginEvent {
     TResult Function()? connectWithFacebook,
     TResult Function()? connectWithInstagram,
     TResult Function()? connectWithTwitter,
+    TResult Function()? connected,
+    TResult Function()? connectionFailed,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -220,6 +240,10 @@ extension LoginEventPatterns on LoginEvent {
         return connectWithInstagram();
       case _ConnectWithTwitter() when connectWithTwitter != null:
         return connectWithTwitter();
+      case _Connected() when connected != null:
+        return connected();
+      case _ConnectionFailed() when connectionFailed != null:
+        return connectionFailed();
       case _:
         return orElse();
     }
@@ -248,6 +272,8 @@ extension LoginEventPatterns on LoginEvent {
     required TResult Function() connectWithFacebook,
     required TResult Function() connectWithInstagram,
     required TResult Function() connectWithTwitter,
+    required TResult Function() connected,
+    required TResult Function() connectionFailed,
   }) {
     final _that = this;
     switch (_that) {
@@ -267,6 +293,10 @@ extension LoginEventPatterns on LoginEvent {
         return connectWithInstagram();
       case _ConnectWithTwitter():
         return connectWithTwitter();
+      case _Connected():
+        return connected();
+      case _ConnectionFailed():
+        return connectionFailed();
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -294,6 +324,8 @@ extension LoginEventPatterns on LoginEvent {
     TResult? Function()? connectWithFacebook,
     TResult? Function()? connectWithInstagram,
     TResult? Function()? connectWithTwitter,
+    TResult? Function()? connected,
+    TResult? Function()? connectionFailed,
   }) {
     final _that = this;
     switch (_that) {
@@ -313,6 +345,10 @@ extension LoginEventPatterns on LoginEvent {
         return connectWithInstagram();
       case _ConnectWithTwitter() when connectWithTwitter != null:
         return connectWithTwitter();
+      case _Connected() when connected != null:
+        return connected();
+      case _ConnectionFailed() when connectionFailed != null:
+        return connectionFailed();
       case _:
         return null;
     }
@@ -616,8 +652,48 @@ class _ConnectWithTwitter implements LoginEvent {
 }
 
 /// @nodoc
+
+class _Connected implements LoginEvent {
+  const _Connected();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _Connected);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() {
+    return 'LoginEvent.connected()';
+  }
+}
+
+/// @nodoc
+
+class _ConnectionFailed implements LoginEvent {
+  const _ConnectionFailed();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _ConnectionFailed);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() {
+    return 'LoginEvent.connectionFailed()';
+  }
+}
+
+/// @nodoc
 mixin _$LoginState {
-  LoginStatus get loginStatus;
+  LoginStatusView get loginStatus;
   String get errorMessage;
   bool get togglePasswordVisibility;
   String get username;
@@ -665,7 +741,7 @@ abstract mixin class $LoginStateCopyWith<$Res> {
       _$LoginStateCopyWithImpl;
   @useResult
   $Res call(
-      {LoginStatus loginStatus,
+      {LoginStatusView loginStatus,
       String errorMessage,
       bool togglePasswordVisibility,
       String username,
@@ -694,7 +770,7 @@ class _$LoginStateCopyWithImpl<$Res> implements $LoginStateCopyWith<$Res> {
       loginStatus: null == loginStatus
           ? _self.loginStatus
           : loginStatus // ignore: cast_nullable_to_non_nullable
-              as LoginStatus,
+              as LoginStatusView,
       errorMessage: null == errorMessage
           ? _self.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -808,7 +884,7 @@ extension LoginStatePatterns on LoginState {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(LoginStatus loginStatus, String errorMessage,
+    TResult Function(LoginStatusView loginStatus, String errorMessage,
             bool togglePasswordVisibility, String username, String password)?
         $default, {
     required TResult orElse(),
@@ -838,7 +914,7 @@ extension LoginStatePatterns on LoginState {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(LoginStatus loginStatus, String errorMessage,
+    TResult Function(LoginStatusView loginStatus, String errorMessage,
             bool togglePasswordVisibility, String username, String password)
         $default,
   ) {
@@ -866,7 +942,7 @@ extension LoginStatePatterns on LoginState {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(LoginStatus loginStatus, String errorMessage,
+    TResult? Function(LoginStatusView loginStatus, String errorMessage,
             bool togglePasswordVisibility, String username, String password)?
         $default,
   ) {
@@ -892,7 +968,7 @@ class _Initial implements LoginState {
       this.password = ''});
 
   @override
-  final LoginStatus loginStatus;
+  final LoginStatusView loginStatus;
   @override
   @JsonKey()
   final String errorMessage;
@@ -950,7 +1026,7 @@ abstract mixin class _$InitialCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {LoginStatus loginStatus,
+      {LoginStatusView loginStatus,
       String errorMessage,
       bool togglePasswordVisibility,
       String username,
@@ -979,7 +1055,7 @@ class __$InitialCopyWithImpl<$Res> implements _$InitialCopyWith<$Res> {
       loginStatus: null == loginStatus
           ? _self.loginStatus
           : loginStatus // ignore: cast_nullable_to_non_nullable
-              as LoginStatus,
+              as LoginStatusView,
       errorMessage: null == errorMessage
           ? _self.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable

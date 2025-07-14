@@ -43,6 +43,7 @@ extension SplashStatePatterns on SplashState {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loaded value)? loaded,
+    TResult Function(_LoggedIn value)? loggedIn,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -51,6 +52,8 @@ extension SplashStatePatterns on SplashState {
         return initial(_that);
       case _Loaded() when loaded != null:
         return loaded(_that);
+      case _LoggedIn() when loggedIn != null:
+        return loggedIn(_that);
       case _:
         return orElse();
     }
@@ -73,6 +76,7 @@ extension SplashStatePatterns on SplashState {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loaded value) loaded,
+    required TResult Function(_LoggedIn value) loggedIn,
   }) {
     final _that = this;
     switch (_that) {
@@ -80,6 +84,8 @@ extension SplashStatePatterns on SplashState {
         return initial(_that);
       case _Loaded():
         return loaded(_that);
+      case _LoggedIn():
+        return loggedIn(_that);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -101,6 +107,7 @@ extension SplashStatePatterns on SplashState {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loaded value)? loaded,
+    TResult? Function(_LoggedIn value)? loggedIn,
   }) {
     final _that = this;
     switch (_that) {
@@ -108,6 +115,8 @@ extension SplashStatePatterns on SplashState {
         return initial(_that);
       case _Loaded() when loaded != null:
         return loaded(_that);
+      case _LoggedIn() when loggedIn != null:
+        return loggedIn(_that);
       case _:
         return null;
     }
@@ -129,6 +138,7 @@ extension SplashStatePatterns on SplashState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(Map<String, dynamic> args)? loaded,
+    TResult Function()? loggedIn,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -137,6 +147,8 @@ extension SplashStatePatterns on SplashState {
         return initial();
       case _Loaded() when loaded != null:
         return loaded(_that.args);
+      case _LoggedIn() when loggedIn != null:
+        return loggedIn();
       case _:
         return orElse();
     }
@@ -159,6 +171,7 @@ extension SplashStatePatterns on SplashState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function(Map<String, dynamic> args) loaded,
+    required TResult Function() loggedIn,
   }) {
     final _that = this;
     switch (_that) {
@@ -166,6 +179,8 @@ extension SplashStatePatterns on SplashState {
         return initial();
       case _Loaded():
         return loaded(_that.args);
+      case _LoggedIn():
+        return loggedIn();
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -187,6 +202,7 @@ extension SplashStatePatterns on SplashState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function(Map<String, dynamic> args)? loaded,
+    TResult? Function()? loggedIn,
   }) {
     final _that = this;
     switch (_that) {
@@ -194,6 +210,8 @@ extension SplashStatePatterns on SplashState {
         return initial();
       case _Loaded() when loaded != null:
         return loaded(_that.args);
+      case _LoggedIn() when loggedIn != null:
+        return loggedIn();
       case _:
         return null;
     }
@@ -264,6 +282,17 @@ class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
           : args // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
     ));
+  }
+}
+
+/// @nodoc
+
+class _LoggedIn implements SplashState {
+  const _LoggedIn();
+
+  @override
+  String toString() {
+    return 'SplashState.loggedIn()';
   }
 }
 

@@ -2,13 +2,17 @@ import 'package:demo_app/core/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../core/constants/fonts.dart';
 import '../../core/constants/style.dart';
 import '../../core/utils/keys/asset_keys.dart';
-import '../blocs/login_bloc.dart';
+import '../../routes/routes.dart';
+import '../blocs/login_bloc.dart' hide LoginStatus;
 import '../widgets/common_text_form_field.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -40,140 +44,156 @@ class _LoginScreenState extends State<LoginScreen> {
         statusBarIconBrightness: Brightness.dark,
       ),
       child: BlocConsumer<LoginBloc, LoginState>(
-        listener: (context, state) {},
+        listener: _listener,
         builder: (context, state) {
           return Scaffold(
             body: SafeArea(
-              child: Center(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: GestureDetector(
-                          onTap: () => Navigator.pop(context),
-                          child: CircleAvatar(
-                              backgroundColor: Style.lightGrayColor,
-                              radius: 20,
-                                child: Icon(Icons.arrow_back_ios_new, size: 14)),
-                        ),
-                        ),
-
-                      SizedBox(height: SizeConfig.screenHeight * 0.08),
-                      Text(
-                        'Sign in now',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontFamily: Fonts.sfUI,
-                              fontSize: 32,
-                            ),
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.screenWidth * 0.05),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: CircleAvatar(
+                            backgroundColor: Style.lightGrayColor,
+                            radius: 20,
+                            child: Icon(Icons.arrow_back_ios_new, size: 14)),
                       ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Please sign in to continue our app',
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.08),
+                    Text(
+                      'Sign in now',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontFamily: Fonts.sfUI,
+                            fontSize: 32,
+                          ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Please sign in to continue our app',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontFamily: Fonts.sfUI,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                          ),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.07),
+                    CommonTextFormField(
+                      controller: emailController,
+                      hintText: 'www.uihut@gmail.com',
+                      onChanged: (value) => context.read<LoginBloc>().add(
+                            LoginEvent.usernameChanged(value),
+                          ),
+                    ),
+                    SizedBox(height: 16),
+                    CommonTextFormField(
+                      onChanged: (value) => context.read<LoginBloc>().add(
+                            LoginEvent.passwordChanged(value),
+                          ),
+                      obscureText: state.togglePasswordVisibility,
+                      controller: passwordController,
+                      hintText: '************',
+                      suffixIcon: IconButton(
+                          onPressed: () => context.read<LoginBloc>().add(
+                              LoginEvent.togglePasswordVisibility(
+                                  !state.togglePasswordVisibility)),
+                          icon: Icon(
+                              color: Style.lightSubTextColor,
+                              state.togglePasswordVisibility
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined)),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.02),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        'Forget Password?',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontFamily: Fonts.sfUI,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                            ),
+                            fontFamily: Fonts.sfUI,
+                            fontSize: 14,
+                            color: Style.secondaryColor,
+                            fontWeight: FontWeight.w500),
                       ),
-                      SizedBox(height: SizeConfig.screenHeight * 0.07),
-                      CommonTextFormField(
-                        controller: emailController,
-                        hintText: 'www.uihut@gmail.com',
-                        onChanged: (value) => context.read<LoginBloc>().add(
-                              LoginEvent.usernameChanged(value),
-                            ),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.05),
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
                       ),
-                      SizedBox(height: 16),
-                      CommonTextFormField(
-                        onChanged: (value) => context.read<LoginBloc>().add(
-                              LoginEvent.passwordChanged(value),
-                            ),
-                        obscureText: state.togglePasswordVisibility,
-                        controller: passwordController,
-                        hintText: '************',
-                        suffixIcon: IconButton(
-                            onPressed: () => context.read<LoginBloc>().add(
-                                LoginEvent.togglePasswordVisibility(
-                                    !state.togglePasswordVisibility)),
-                            icon: Icon(
-                                color: Style.lightSubTextColor,
-                                state.togglePasswordVisibility
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined)),
-                      ),
-                      SizedBox(height: SizeConfig.screenHeight * 0.02),
-                      Align(
-                        alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 100, vertical: 16),
                         child: Text(
-                          'Forget Password?',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontFamily: Fonts.sfUI,
-                                fontSize: 14,
-                                color: Style.secondaryColor,
-                            fontWeight: FontWeight.w500
-                          ),
+                          'Sign In',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontFamily: Fonts.sfUI,
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         ),
                       ),
-                      SizedBox(height: SizeConfig.screenHeight * 0.05),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.05),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don’t have an account? ",
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontFamily: Fonts.sfUI,
+                                    fontSize: 16,
+                                    color: Style.lightSubTextColor,
+                                  ),
                         ),
-                        child: Padding(
-                          padding:  EdgeInsets.symmetric(
-                              horizontal: 100, vertical: 16),
-                          child: Text('Sign In',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        Text(
+                          "Sign up",
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontFamily: Fonts.sfUI,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Style.secondaryColor,
+                                  ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.025),
+                    Text(
+                      "Or connect",
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontFamily: Fonts.sfUI,
                             fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
+                            color: Style.lightSubTextColor,
                           ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: SizeConfig.screenHeight * 0.05),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Don’t have an account? ",
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontFamily: Fonts.sfUI,
-                              fontSize: 16,
-                              color: Style.lightSubTextColor,
-                            ),
-                          ),
-                          Text(
-                            "Sign up",
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontFamily: Fonts.sfUI,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Style.secondaryColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: SizeConfig.screenHeight * 0.025),
-                      Text("Or connect",
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontFamily: Fonts.sfUI,
-                          fontSize: 16,
-                          color: Style.lightSubTextColor,
-                        ),
-                      ),
-                      Spacer(),
-                      _social(),
-                      SizedBox(height: SizeConfig.screenHeight * 0.05),
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.09),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildSocialIcon(AssetKeys.facebook, () async {
+                          context
+                              .read<LoginBloc>()
+                              .add(LoginEvent.connectWithFacebook());
+                        }),
+                        SizedBox(width: 20),
+                        _buildSocialIcon(AssetKeys.instagram, () {}),
+                        SizedBox(width: 20),
+                        _buildSocialIcon(AssetKeys.twitter, () {}),
+                      ],
+                    ),
+                    SizedBox(height: SizeConfig.screenHeight * 0.05),
+                  ],
                 ),
               ),
             ),
@@ -183,37 +203,35 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _social() => Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      _buildSocialIcon('facebook'),
-      SizedBox(width: 20),
-      _buildSocialIcon('instagram'),
-      SizedBox(width: 20),
-      _buildSocialIcon('twitter'),
-    ],
-  );
-
-  Widget _buildSocialIcon(String platform) {
-    String icon;
-    switch (platform) {
-      case 'facebook':
-        icon = AssetKeys.facebook;
-        break;
-      case 'instagram':
-        icon = AssetKeys.instagram;
-        break;
-      case 'twitter':
-        icon = AssetKeys.twitter;
-        break;
-      default:
-        icon = AssetKeys.facebook;
+  void _listener(BuildContext context, LoginState state) {
+    if (state.loginStatus == LoginStatusView.loginSuccess) {
+      Navigator.pushNamedAndRemoveUntil(
+          context, Routes.dashboardScreen, (route) => false);
     }
+  }
 
-    return SvgPicture.asset(
-      icon,
-      width: 50,
-      height: 50,
+  Widget _buildSocialIcon(String asset, Function() onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: SvgPicture.asset(
+        asset,
+        width: 50,
+        height: 50,
+      ),
     );
+  }
+
+  Future<UserCredential?> signInWithFacebook() async {
+    final LoginResult result = await FacebookAuth.instance.login(
+      loginBehavior: LoginBehavior.webOnly,
+    );
+    if (result.status == LoginStatus.success) {
+      // Create a credential from the access token
+      final OAuthCredential credential =
+          FacebookAuthProvider.credential(result.accessToken!.tokenString);
+      // Once signed in, return the UserCredential
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    }
+    return null;
   }
 }

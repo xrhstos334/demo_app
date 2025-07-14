@@ -3,16 +3,12 @@ import 'dart:convert';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 class OnBoardingRepository {
-  final FirebaseStorage firebaseStorage;
-  final FirebaseRemoteConfig remoteConfig;
 
-  OnBoardingRepository({
-    required this.firebaseStorage,
-    required this.remoteConfig,
-  });
 
-   Future<Map<String,dynamic>> fetchData() async {
+   static Future<Map<String,dynamic>> fetchData() async {
     try {
+      final firebaseStorage = FirebaseStorage.instance;
+      final remoteConfig = FirebaseRemoteConfig.instance;
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(seconds: 10),
         minimumFetchInterval: const Duration(seconds: 1),
@@ -37,6 +33,6 @@ class OnBoardingRepository {
         "images": [],
       };
     }
-  }
+   }
 
 }

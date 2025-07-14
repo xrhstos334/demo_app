@@ -1,8 +1,7 @@
-import 'package:demo_app/core/di/locator.dart';
-import 'package:demo_app/core/services/repository_service.dart';
 import 'package:demo_app/presentation/blocs/login_bloc.dart';
 import 'package:demo_app/presentation/cubits/on_boarding_cubit/on_boarding_cubit.dart';
 import 'package:demo_app/presentation/cubits/splash_cubit/splash_cubit.dart';
+import 'package:demo_app/presentation/screens/dashboard.dart';
 import 'package:demo_app/presentation/screens/login_screen.dart';
 import 'package:demo_app/routes/routes.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +21,6 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => BlocProvider<SplashCubit>(
             create: (context) => SplashCubit(
-              onBoardingRepository:
-                  getIt<RepositoryService>().onBoardingRepository,
             ),
             child: const SplashScreen(),
           ),
@@ -39,17 +36,12 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => BlocProvider<LoginBloc>(
                 create: (context) => LoginBloc(), child: const LoginScreen()));
-
-      default:
+      case Routes.dashboardScreen:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<SplashCubit>(
-            create: (context) => SplashCubit(
-              onBoardingRepository:
-                  getIt<RepositoryService>().onBoardingRepository,
-            ),
-            child: const SplashScreen(),
-          ),
-        );
+            builder: (create)=> const Dashboard());
+      default:
+    return MaterialPageRoute(
+    builder: (create)=> const Dashboard());
     }
   }
 }
