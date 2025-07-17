@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:demo_app/core/services/firebase_auth_service.dart';
+import 'package:demo_app/core/firebase/firebase_auth_service.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../data/data_models /user_auth.dart';

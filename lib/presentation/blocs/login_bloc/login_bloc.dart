@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../../core/services/firebase_auth_service.dart';
+import '../../../core/firebase/firebase_auth_service.dart';
 import '../../providers/auth_status_enums.dart';
 part 'login_event.dart';
 
