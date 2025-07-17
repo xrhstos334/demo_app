@@ -234,6 +234,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   void _listener(BuildContext context, OnBoardingState state) async {
     if (state.status == OnBoardingStatus.skip ||
         state.status == OnBoardingStatus.complete) {
+      print("login screen");
       Navigator.pushNamed(context, Routes.loginScreen);
     }else if (state.status == OnBoardingStatus.error) {
       exit(0);
