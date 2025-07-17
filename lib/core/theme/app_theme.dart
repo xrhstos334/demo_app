@@ -9,10 +9,20 @@ class AppTheme {
 
   static lightTheme() {
     return ThemeData(
-      scaffoldBackgroundColor: Colors.white,
+      scaffoldBackgroundColor: Colors.white.withValues(alpha: 0.97),
       primarySwatch: Colors.blue,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       primaryColor: Style.primaryColor,
+      colorScheme: ColorScheme(
+          brightness: Brightness.light,
+          primary: Style.primaryColor,
+          onPrimary: Colors.black,
+          secondary: Style.secondaryColor,
+          onSecondary: Colors.black,
+          error: Colors.red,
+          onError: Colors.red,
+          surface: Colors.black,
+          onSurface: Colors.black),
       textTheme: TextTheme(
         bodyMedium: TextStyle(
           fontSize: 16,
@@ -26,6 +36,8 @@ class AppTheme {
             color: Style.lightTextColor,
           )
       ),
+
+
       elevatedButtonTheme: ElevatedButtonThemeData(
 
         style: ButtonStyle(

@@ -1,11 +1,13 @@
-import 'package:demo_app/presentation/blocs/login_bloc.dart';
+import 'package:demo_app/presentation/blocs/home_bloc/home_bloc.dart';
+import 'package:demo_app/presentation/blocs/login_bloc/login_bloc.dart';
 import 'package:demo_app/presentation/cubits/on_boarding_cubit/on_boarding_cubit.dart';
 import 'package:demo_app/presentation/cubits/splash_cubit/splash_cubit.dart';
 import 'package:demo_app/presentation/screens/dashboard.dart';
-import 'package:demo_app/presentation/screens/login_screen.dart';
+import 'package:demo_app/presentation/screens/auth_screen.dart';
 import 'package:demo_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../presentation/blocs/dashboard_bloc/dashboard_bloc.dart';
 import '../presentation/screens/on_boarding_screen.dart';
 import '../presentation/screens/splash_screen.dart';
 
@@ -34,11 +36,24 @@ class RouteGenerator {
                 child: const OnBoardingScreen()));
       case Routes.loginScreen:
         return MaterialPageRoute(
-            builder: (_) => BlocProvider<LoginBloc>(
-                create: (context) => LoginBloc(), child: const LoginScreen()));
+          builder: (_) => BlocProvider<LoginBloc>(
+            create: (context) => LoginBloc()..add(LoginEvent.started()),
+            child: AuthScreen(),
+          ),
+        );
       case Routes.dashboardScreen:
         return MaterialPageRoute(
-            builder: (create)=> const Dashboard());
+            builder: (create)=> MultiBlocProvider(
+              providers: [
+                BlocProvider<DashboardBloc>(
+                  create: (context) => DashboardBloc(),
+                ),
+                BlocProvider<HomeBloc>(
+                  create: (context) => HomeBloc()..add(HomeEvent.started()),
+                ),
+              ],
+                child: const Dashboard(),
+            ));
       default:
     return MaterialPageRoute(
     builder: (create)=> const Dashboard());

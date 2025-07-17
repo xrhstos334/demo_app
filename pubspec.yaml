@@ -58,6 +58,12 @@ dependencies:
   firebase_remote_config: ^5.4.7
   firebase_analytics: ^11.5.2
   flutter_facebook_auth: ^7.1.2
+  grpc: ^4.1.0
+  protoc_plugin: ^22.4.0
+  protobuf: ^4.1.0
+  geolocator: ^14.0.2
+  http: ^1.4.0
+  font_awesome_flutter: ^10.8.0
 
 
 
@@ -85,6 +91,7 @@ flutter:
     - assets/svg/
     - assets/png/
     - assets/svg/login/
+    - assets/svg/dashboard/
     - assets/svg/on_boarding/
 
   fonts:
