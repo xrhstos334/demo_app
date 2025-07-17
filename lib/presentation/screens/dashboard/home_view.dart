@@ -13,7 +13,6 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return  BlocConsumer<HomeBloc, HomeState>(
   listener: (context, state) {
-    // TODO: implement listener
   },
   builder: (context, state) {
     return Scaffold(
