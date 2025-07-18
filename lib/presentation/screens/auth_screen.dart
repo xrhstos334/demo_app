@@ -1,5 +1,6 @@
 import 'package:demo_app/core/utils/size_config.dart';
 import 'package:demo_app/core/utils/validators.dart';
+import 'package:demo_app/presentation/blocs/auth_bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,11 +10,8 @@ import '../../core/constants/fonts.dart';
 import '../../core/constants/style.dart';
 import '../../core/utils/keys/asset_keys.dart';
 import '../../routes/routes.dart';
-import '../blocs/login_bloc/login_bloc.dart' hide LoginStatus;
 import '../providers/auth_status_enums.dart';
 import '../widgets/common_text_form_field.dart';
-
-import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -28,7 +26,6 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController usernameController = TextEditingController();
 
   final _formKeyEmail = GlobalKey<FormState>();
-  final _formKeyUsername = GlobalKey<FormState>();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -49,7 +46,7 @@ class _AuthScreenState extends State<AuthScreen> {
       value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
       ),
-      child: BlocConsumer<LoginBloc, LoginState>(
+      child: BlocConsumer<AuthBloc, AuthState>(
         listener: _listener,
         builder: (context, state) {
           return Scaffold(
@@ -67,7 +64,7 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
-   Widget _viewHandler(LoginState state, BuildContext context) {
+   Widget _viewHandler(AuthState state, BuildContext context) {
     if (state.view == AuthView.login) {
       return _loginWidget(state, context);
     } else if (state.view == AuthView.signUp) {
@@ -83,7 +80,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
 
 
-  Widget _forgotPassword(LoginState state, BuildContext context) {
+  Widget _forgotPassword(AuthState state, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -116,8 +113,8 @@ class _AuthScreenState extends State<AuthScreen> {
           validator: (value) => Validators.emailValidator(value),
           controller: emailController,
           hintText: 'www.uihut@gmail.com',
-          onChanged: (value) => context.read<LoginBloc>().add(
-            LoginEvent.emailChanged(value),
+          onChanged: (value) => context.read<AuthBloc>().add(
+            AuthEvent.emailChanged(value),
           ),
         ),
 
@@ -125,7 +122,7 @@ class _AuthScreenState extends State<AuthScreen> {
         ElevatedButton(
           onPressed: () {
             if (_formKeyEmail.currentState!.validate()) {
-               context.read<LoginBloc>().add(LoginEvent.resetPassword(state.email));
+               context.read<AuthBloc>().add(AuthEvent.resetPassword(state.email));
             }
           },
           style: ElevatedButton.styleFrom(
@@ -157,7 +154,7 @@ class _AuthScreenState extends State<AuthScreen> {
     return Align(
       alignment: Alignment.topLeft,
       child: GestureDetector(
-        onTap: () => context.read<LoginBloc>().backButtonNavigationAuth(),
+        onTap: () => context.read<AuthBloc>().backButtonNavigationAuth(),
         child: CircleAvatar(
           backgroundColor: Style.lightGrayColor,
           radius: 20,
@@ -168,7 +165,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
 
-  Widget _loginWidget(LoginState state, BuildContext context) {
+  Widget _loginWidget(AuthState state, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -197,23 +194,23 @@ class _AuthScreenState extends State<AuthScreen> {
           validator: (value) => Validators.emailValidator(value),
           controller: emailController,
           hintText: 'www.uihut@gmail.com',
-          onChanged: (value) => context.read<LoginBloc>().add(
-                LoginEvent.emailChanged(value),
+          onChanged: (value) => context.read<AuthBloc>().add(
+                AuthEvent.emailChanged(value),
               ),
         ),
         SizedBox(height: 16),
         CommonTextFormField(
           formKey: _formKey,
           validator: (value) => Validators.passwordValidator(value),
-          onChanged: (value) => context.read<LoginBloc>().add(
-                LoginEvent.passwordChanged(value),
+          onChanged: (value) => context.read<AuthBloc>().add(
+                AuthEvent.passwordChanged(value),
               ),
           obscureText: state.togglePasswordVisibility,
           controller: passwordController,
           hintText: '************',
           suffixIcon: IconButton(
-              onPressed: () => context.read<LoginBloc>().add(
-                  LoginEvent.togglePasswordVisibility(
+              onPressed: () => context.read<AuthBloc>().add(
+                  AuthEvent.togglePasswordVisibility(
                       !state.togglePasswordVisibility)),
               icon: Icon(
                   color: Style.lightSubTextColor,
@@ -225,7 +222,7 @@ class _AuthScreenState extends State<AuthScreen> {
         Align(
           alignment: Alignment.centerRight,
           child: TextButton(
-            onPressed: () => context.read<LoginBloc>().add(LoginEvent.goTo(AuthView.forgotPassword)),
+            onPressed: () => context.read<AuthBloc>().add(AuthEvent.goTo(AuthView.forgotPassword)),
             child: Text(
               'Forget Password?',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -240,7 +237,7 @@ class _AuthScreenState extends State<AuthScreen> {
         ElevatedButton(
           onPressed: () {
             if (_formKey.currentState!.validate() && _formKeyEmail.currentState!.validate()) {
-              context.read<LoginBloc>().add(LoginEvent.signIn());
+              context.read<AuthBloc>().add(AuthEvent.signIn());
             }
           },
           style: ElevatedButton.styleFrom(
@@ -272,7 +269,7 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
             TextButton(
               onPressed: () {
-                context.read<LoginBloc>().add(LoginEvent.goTo(AuthView.signUp));
+                context.read<AuthBloc>().add(AuthEvent.goTo(AuthView.signUp));
               },
               child: Text(
                 "Sign up",
@@ -300,7 +297,7 @@ class _AuthScreenState extends State<AuthScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _buildSocialIcon(AssetKeys.facebook, () async {
-              context.read<LoginBloc>().add(LoginEvent.connectWithFacebook());
+              context.read<AuthBloc>().add(AuthEvent.connectWithFacebook());
             }),
             SizedBox(width: 20),
             _buildSocialIcon(AssetKeys.instagram, () {}),
@@ -313,7 +310,7 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
-  Widget _signUpWidget(LoginState state, BuildContext context) {
+  Widget _signUpWidget(AuthState state, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -341,8 +338,8 @@ class _AuthScreenState extends State<AuthScreen> {
           formKey: null,
           controller: usernameController,
           hintText: 'Username',
-          onChanged: (value) => context.read<LoginBloc>().add(
-            LoginEvent.usernameChanged(value),
+          onChanged: (value) => context.read<AuthBloc>().add(
+            AuthEvent.usernameChanged(value),
           ),
         ),
         SizedBox(height: 16),
@@ -352,23 +349,23 @@ class _AuthScreenState extends State<AuthScreen> {
             validator: (value) =>  Validators.emailValidator(value),
             controller: emailController,
             hintText: 'www.uihut@gmail.com',
-            onChanged: (value) => context.read<LoginBloc>().add(
-                  LoginEvent.emailChanged(value),
+            onChanged: (value) => context.read<AuthBloc>().add(
+                  AuthEvent.emailChanged(value),
                 ),
           ),
         SizedBox(height: 16),
          CommonTextFormField(
            formKey: _formKey,
             validator: (value) => Validators.passwordValidator(value),
-            onChanged: (value) => context.read<LoginBloc>().add(
-                  LoginEvent.passwordChanged(value),
+            onChanged: (value) => context.read<AuthBloc>().add(
+                  AuthEvent.passwordChanged(value),
                 ),
             obscureText: state.togglePasswordVisibility,
             controller: passwordController,
             hintText: '************',
             suffixIcon: IconButton(
-                onPressed: () => context.read<LoginBloc>().add(
-                    LoginEvent.togglePasswordVisibility(
+                onPressed: () => context.read<AuthBloc>().add(
+                    AuthEvent.togglePasswordVisibility(
                         !state.togglePasswordVisibility)),
                 icon: Icon(
                     color: Style.lightSubTextColor,
@@ -393,7 +390,7 @@ class _AuthScreenState extends State<AuthScreen> {
         ElevatedButton(
           onPressed: () {
             if (_formKey.currentState!.validate() && _formKeyEmail.currentState!.validate()) {
-               context.read<LoginBloc>().add(LoginEvent.createAccount());
+               context.read<AuthBloc>().add(AuthEvent.createAccount());
             }
 
           },
@@ -429,7 +426,7 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
             TextButton(
               onPressed: () {
-                context.read<LoginBloc>().add(LoginEvent.goTo(AuthView.login));
+                context.read<AuthBloc>().add(AuthEvent.goTo(AuthView.login));
               },
               child: Text(
                 "Sign in",
@@ -457,7 +454,7 @@ class _AuthScreenState extends State<AuthScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _buildSocialIcon(AssetKeys.facebook, () async {
-              context.read<LoginBloc>().add(LoginEvent.connectWithFacebook());
+              context.read<AuthBloc>().add(AuthEvent.connectWithFacebook());
             }),
             SizedBox(width: 20),
             _buildSocialIcon(AssetKeys.instagram, () {}),
@@ -470,7 +467,7 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
-  void _listener(BuildContext context, LoginState state)async {
+  void _listener(BuildContext context, AuthState state)async {
     if (state.authStatus == AuthActionStatus.loginSuccess) {
       Navigator.pushNamedAndRemoveUntil(
           context, Routes.dashboardScreen, (route) => false);
@@ -484,7 +481,7 @@ class _AuthScreenState extends State<AuthScreen> {
       _showCheckEmailDialog(context);
       await Future.delayed(const Duration(seconds: 2));
       Navigator.pop(context);
-      context.read<LoginBloc>().add(LoginEvent.goTo(AuthView.login));
+      context.read<AuthBloc>().add(AuthEvent.goTo(AuthView.login));
     }
 
 

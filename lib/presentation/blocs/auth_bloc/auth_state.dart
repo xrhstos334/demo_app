@@ -1,13 +1,13 @@
-part of 'login_bloc.dart';
+part of 'auth_bloc.dart';
 
 @Freezed(equal: false)
-abstract class LoginState with _$LoginState {
-  factory LoginState.initial() => LoginState(
+abstract class AuthState with _$AuthState{
+  factory AuthState.initial() => AuthState(
   authStatus: AuthActionStatus.initial,
     view: AuthView.login
   );
 
-  const factory LoginState({
+  const factory AuthState({
     required AuthActionStatus authStatus,
     @Default('') String errorMessage,
     @Default(true) bool togglePasswordVisibility,

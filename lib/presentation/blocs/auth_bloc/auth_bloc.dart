@@ -2,13 +2,13 @@ import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../../core/firebase/firebase_auth_service.dart';
 import '../../providers/auth_status_enums.dart';
-part 'login_event.dart';
+part 'auth_event.dart';
 
-part 'login_state.dart';
+part 'auth_state.dart';
 
-part 'login_bloc.freezed.dart';
-class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc() : super(LoginState.initial()) {
+part 'auth_bloc.freezed.dart';
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  AuthBloc() : super(AuthState.initial()) {
     on<Started>(_onStarted);
     on<TogglePasswordVisibility>(_onTogglePasswordVisibility);
     on<UsernameChanged>(_onUsernameChanged);
@@ -26,18 +26,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   }
 
-  void _emailChanged(EmailChanged event, Emitter<LoginState> emit) {
+  void _emailChanged(EmailChanged event, Emitter<AuthState> emit) {
     emit(state.copyWith(
         authStatus: AuthActionStatus.initial,
         email: event.email));
   }
-  void _resetPassword(ResetPassword event, Emitter<LoginState> emit) async {
+  void _resetPassword(ResetPassword event, Emitter<AuthState> emit) async {
     await FirebaseAuthService().sendPasswordReset(event.email);
     emit(state.copyWith(
       authStatus:  AuthActionStatus.resetSuccess,
     ));
   }
-  void _onStarted(Started event, Emitter<LoginState> emit) {
+  void _onStarted(Started event, Emitter<AuthState> emit) {
     emit(state.copyWith(
       view: AuthView.login,
     ));
@@ -45,7 +45,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   void _onTogglePasswordVisibility(
     TogglePasswordVisibility event,
-    Emitter<LoginState> emit,
+    Emitter<AuthState> emit,
   ) {
     emit(state.copyWith(
         authStatus: AuthActionStatus.initial,
@@ -54,7 +54,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   void _onUsernameChanged(
     UsernameChanged event,
-    Emitter<LoginState> emit,
+    Emitter<AuthState> emit,
   ) {
     emit(state.copyWith(
         authStatus: AuthActionStatus.initial,
@@ -63,14 +63,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   void _onPasswordChanged(
     PasswordChanged event,
-    Emitter<LoginState> emit,
+    Emitter<AuthState> emit,
   ) {
     emit(state.copyWith(
         authStatus: AuthActionStatus.initial,
         password: event.password));
   }
 
-  Future<void> _signIn(SignIn event, Emitter<LoginState> emit) async{
+  Future<void> _signIn(SignIn event, Emitter<AuthState> emit) async{
     var user = await FirebaseAuthService().signInWithEmailAndPassword(
         email: state.email, password: state.password);
     emit(
@@ -85,43 +85,43 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   Future<void> _onConnectWithFacebook(
     ConnectWithFacebook event,
-    Emitter<LoginState> emit,
+    Emitter<AuthState> emit,
   ) async {
     final userCredential = await FirebaseAuthService().signInWithFacebook();
     if (emit.isDone) return;
 
     if (userCredential != null) {
-      add(const LoginEvent.connected());
+      add(const AuthEvent.connected());
     } else {
-      add(const LoginEvent.connectionFailed());
+      add(const AuthEvent.connectionFailed());
     }
   }
 
   void _onConnectWithInstagram(
     ConnectWithInstagram event,
-    Emitter<LoginState> emit,
+    Emitter<AuthState> emit,
   ) {
     // TODO: Implement
   }
 
   void _onConnectWithTwitter(
     ConnectWithTwitter event,
-    Emitter<LoginState> emit,
+    Emitter<AuthState> emit,
   ) {
     // TODO: Implement
   }
 
-  void _onConnected(Connected event, Emitter<LoginState> emit) {
+  void _onConnected(Connected event, Emitter<AuthState> emit) {
     emit(state.copyWith(
 
         authStatus: AuthActionStatus.loginSuccess));
   }
 
-  void _onConnectionFailed(ConnectionFailed event, Emitter<LoginState> emit) {
+  void _onConnectionFailed(ConnectionFailed event, Emitter<AuthState> emit) {
     emit(state.copyWith(authStatus: AuthActionStatus.loginFailure));
   }
 
-  void _onGoTo(GoTo event, Emitter<LoginState> emit) {
+  void _onGoTo(GoTo event, Emitter<AuthState> emit) {
     emit(state.copyWith(
         authStatus: AuthActionStatus.initial,
         view: event.view));
@@ -129,7 +129,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   Future<void> _onCreateAccount(
     CreateAccount event,
-    Emitter<LoginState> emit,
+    Emitter<AuthState> emit,
   ) async {
     final response = await FirebaseAuthService().signUpWithEmailUsernameAndPassword(
       username: state.username,
@@ -146,11 +146,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     backButtonNavigationAuth(){
       if (state.view == AuthView.forgotPassword) {
-        add(LoginEvent.goTo(AuthView.login));
+        add(AuthEvent.goTo(AuthView.login));
       } else if (state.view == AuthView.signUp) {
-        add(LoginEvent.goTo(AuthView.login));
+        add(AuthEvent.goTo(AuthView.login));
       } else if (state.view == AuthView.login) {
-        add(LoginEvent.goTo(AuthView.back));
+        add(AuthEvent.goTo(AuthView.back));
       }
 
     }
