@@ -1,5 +1,5 @@
+import 'package:demo_app/presentation/blocs/auth_bloc/auth_bloc.dart';
 import 'package:demo_app/presentation/blocs/home_bloc/home_bloc.dart';
-import 'package:demo_app/presentation/blocs/login_bloc/login_bloc.dart';
 import 'package:demo_app/presentation/cubits/on_boarding_cubit/on_boarding_cubit.dart';
 import 'package:demo_app/presentation/cubits/splash_cubit/splash_cubit.dart';
 import 'package:demo_app/presentation/screens/dashboard.dart';
@@ -36,8 +36,8 @@ class RouteGenerator {
                 child: const OnBoardingScreen()));
       case Routes.loginScreen:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<LoginBloc>(
-            create: (context) => LoginBloc()..add(LoginEvent.started()),
+          builder: (_) => BlocProvider<AuthBloc>(
+            create: (context) => AuthBloc()..add(AuthEvent.started()),
             child: AuthScreen(),
           ),
         );
