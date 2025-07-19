@@ -11,6 +11,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../core/constants/style.dart';
+import '../../core/utils/logger.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -234,7 +235,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   void _listener(BuildContext context, OnBoardingState state) async {
     if (state.status == OnBoardingStatus.skip ||
         state.status == OnBoardingStatus.complete) {
-      print("login screen");
+      Log.i("login screen");
       Navigator.pushNamed(context, Routes.loginScreen);
     }else if (state.status == OnBoardingStatus.error) {
       exit(0);

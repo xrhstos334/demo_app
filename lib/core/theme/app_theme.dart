@@ -9,6 +9,8 @@ class AppTheme {
 
   static lightTheme() {
     return ThemeData(
+      brightness: Brightness.light,
+
       scaffoldBackgroundColor: Colors.white.withValues(alpha: 0.97),
       primarySwatch: Colors.blue,
       visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -21,7 +23,7 @@ class AppTheme {
           onSecondary: Colors.black,
           error: Colors.red,
           onError: Colors.red,
-          surface: Colors.black,
+          surface: Colors.white,
           onSurface: Colors.black),
       textTheme: TextTheme(
         bodyMedium: TextStyle(

@@ -1,13 +1,18 @@
 import 'package:demo_app/presentation/blocs/auth_bloc/auth_bloc.dart';
 import 'package:demo_app/presentation/blocs/home_bloc/home_bloc.dart';
+import 'package:demo_app/presentation/blocs/notifications_bloc/notifications_bloc.dart';
+import 'package:demo_app/presentation/cubits/details_cubit/details_cubit.dart';
 import 'package:demo_app/presentation/cubits/on_boarding_cubit/on_boarding_cubit.dart';
 import 'package:demo_app/presentation/cubits/splash_cubit/splash_cubit.dart';
 import 'package:demo_app/presentation/screens/dashboard.dart';
 import 'package:demo_app/presentation/screens/auth_screen.dart';
+import 'package:demo_app/presentation/screens/dashboard/notifications_screen.dart';
 import 'package:demo_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../presentation/blocs/dashboard_bloc/dashboard_bloc.dart';
+import '../presentation/screens/dashboard/details.dart';
+import '../presentation/screens/dashboard/searcg_view.dart';
 import '../presentation/screens/on_boarding_screen.dart';
 import '../presentation/screens/splash_screen.dart';
 
@@ -41,6 +46,27 @@ class RouteGenerator {
             child: AuthScreen(),
           ),
         );
+      case Routes.details:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<DetailsCubit>(
+            create: (context) => DetailsCubit(
+             args: settings.arguments as Map<String, dynamic>,),
+            child: Details(),
+        ),);
+
+      case Routes.search:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<DetailsCubit>(
+            create: (context) => DetailsCubit(
+              args: settings.arguments as Map<String, dynamic>,),
+            child: SearchView(),
+          ),);
+      case Routes.notifications:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<NotificationsBloc>(
+            create: (context) => NotificationsBloc(),
+            child: NotificationsScreen(),
+          ),);
       case Routes.dashboardScreen:
         return MaterialPageRoute(
             builder: (create)=> MultiBlocProvider(

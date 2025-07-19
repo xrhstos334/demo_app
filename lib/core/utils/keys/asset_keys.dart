@@ -22,4 +22,6 @@ class AssetKeys{
   static const String calendar = 'assets/svg/dashboard/calendar.svg';
   static const String messages = 'assets/svg/dashboard/messages_dashboard.svg';
   static const String person = 'assets/svg/dashboard/person.svg';
+  static const String location = 'assets/svg/dashboard/location.svg';
+
 }

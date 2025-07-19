@@ -1,4 +1,7 @@
+import 'package:demo_app/core/utils/local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+
+import '../utils/logger.dart';
 
 class FirebaseService {
   Future<void> initFirebase() async {
@@ -20,16 +23,18 @@ class FirebaseService {
     ///handle click notification when app is in background
     FirebaseMessaging.onMessageOpenedApp
         .listen((RemoteMessage message) async {
-      print("Message clicked!");
+      Log.i("Message clicked!");
     });
   }
 
   Future<void> handleKilledAppNotifications(RemoteMessage message) async {}
 
   firebaseOnMessage(RemoteMessage message) async {
-    // Handle the message when the app is in the foreground
-    print("Message received: ${message.notification?.title} - ${message.notification?.body}");
-    // You can show a dialog, update UI, or perform any action based on the message
+    notificationPlugin.showNotification(
+        12345,
+        message.notification!.title!,
+        message.notification!.body!,
+        "local_notification_payload_play_only_foreground");
   }
 }
 

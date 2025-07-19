@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo_app/core/firebase/firebase_service.dart';
 import 'package:demo_app/core/theme/app_theme.dart';
 import 'package:demo_app/routes/routes.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'core/utils/logger.dart';
 import 'firebase_options.dart';
 
 import 'core/utils/local_notifications.dart';
@@ -23,7 +25,7 @@ Future<void> main() async{
   final token= await FirebaseMessaging.instance.getToken();
   if (token != null) {
     fcmToken = token;
-    print("=================> FCM Token: $fcmToken");
+    Log.i("=================> FCM Token: $fcmToken");
   }
 
 
@@ -37,6 +39,64 @@ Future<void> main() async{
     await Permission.notification.request();
   }
   await notificationPlugin.init();
+
+
+ FirebaseFirestore db =  FirebaseFirestore.instance;
+  // CollectionReference places = db.collection("places");
+  // await places.add({
+  //   "name": "Casa Las Tirtugas",
+  //   "place": "Av Damero, Mexico",
+  //   "rating": 4.9,
+  //   "price": 120,
+  //   "description": "You will get a complete travel package on the beaches. Packages in the form of airline tickets, recommended Hotel rooms, Transportation, Have you ever been on holiday to the Greek ETC",
+  //   "users": [
+  //     {
+  //       "name": "Chris",
+  //       "comment" : "Great place",
+  //       "rating": 5.0,},
+  //     {
+  //       "name": "George",
+  //       "comment" : "",
+  //       "rating": 2.0,},
+  //
+  //     {
+  //       "name": "John",
+  //       "comment" : "Great place",
+  //       "rating": 4.0,},
+  //     {
+  //       "name": "Dimitris",
+  //       "comment" : "",
+  //       "rating": 3.5,},
+  //   ]
+  // });
+  // await places.add({
+  //   "name": "Rangauti Resort",
+  //   "place": "Sylhet, Airport Road",
+  //   "rating": 4.0,
+  //   "price": 150,
+  //   "description": "You will get a complete travel package on the beaches. Packages in the form of airline tickets, recommended Hotel rooms, Transportation, Have you ever been on holiday to the Greek ETC",
+  //   "users": [
+  //     {
+  //       "name": "Chris",
+  //       "comment" : "Great place",
+  //       "rating": 5.0,},
+  //     {
+  //       "name": "George",
+  //       "comment" : "",
+  //       "rating": 2.0,},
+  //
+  //     {
+  //       "name": "John",
+  //       "comment" : "Great place",
+  //       "rating": 4.0,},
+  //     {
+  //       "name": "Dimitris",
+  //       "comment" : "",
+  //       "rating": 3.5,},
+  //   ]
+  // });
+
+
   runApp(const DemoApp());
 }
 

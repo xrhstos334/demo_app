@@ -4,6 +4,8 @@ import 'package:demo_app/data/data_models%20/user_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
+import '../utils/logger.dart';
+
 class FirebaseAuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -39,12 +41,11 @@ class FirebaseAuthService {
       await userCredential.user?.reload();
 
       User? updatedUser = FirebaseAuth.instance.currentUser;
-      print("Username: ${updatedUser?.displayName}");
-
+      Log.i("Username: ${updatedUser?.displayName}");
 
       return true;
     } on FirebaseAuthException catch (e) {
-      print('❌ Sign-up error: ${e.message}');
+      Log.e('Sign-up error: ${e.message}');
       return false;
     }
   }
@@ -68,9 +69,9 @@ class FirebaseAuthService {
   Future<void> sendPasswordReset(String email) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      print("📩 Reset email sent to $email");
+      Log.i("Reset email sent to $email");
     } on FirebaseAuthException catch (e) {
-      print("❌ Error sending reset email: ${e.message}");
+      Log.e("Error sending reset email: ${e.message}");
       throw e;
     }
   }
@@ -81,12 +82,12 @@ class FirebaseAuthService {
       String? displayName = user.displayName;
       String? photoURL = user.photoURL;
       String? email = user.email;
-      print('Όνομα: $displayName');
-      print('Φωτογραφία: $photoURL');
-      print('Email: $email');
+      Log.i('Όνομα: $displayName');
+      Log.i('Φωτογραφία: $photoURL');
+      Log.i('Email: $email');
       return AuthUser.fromFirebase(user);
     } else {
-      print('Κανένας χρήστης δεν είναι συνδεδεμένος.');
+      Log.i('Κανένας χρήστης δεν είναι συνδεδεμένος.');
       return null;
     }
   }

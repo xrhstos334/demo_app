@@ -9,6 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../core/constants/style.dart';
+import '../../core/utils/logger.dart';
 import '../../core/utils/size_config.dart';
 import '../../routes/routes.dart';
 
@@ -94,11 +95,9 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _listener(BuildContext viewContext, SplashState state)async {
-    print("🔔 state = $state");
     await state.when(
       initial: () {},
       loaded: (data) async {
-        print("🔔 SplashState.loaded with data: $data");
         if (data['args'].isNotEmpty && data['images'].isNotEmpty) {
           for (final url in data['images']) {
             await precacheImage(NetworkImage(url), context);
@@ -157,7 +156,7 @@ class _SplashScreenState extends State<SplashScreen>
         }
       },
       loggedIn: () {
-        print("🔔logged in with user:");
+        Log.i("🔔logged in with user:");
         Navigator.pushReplacementNamed(viewContext, Routes.dashboardScreen);
       },
     );
