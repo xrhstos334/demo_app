@@ -40,61 +40,10 @@ Future<void> main() async{
   }
   await notificationPlugin.init();
 
+   // await _addNotifications();
+  // await addPlaces();
 
- FirebaseFirestore db =  FirebaseFirestore.instance;
-  // CollectionReference places = db.collection("places");
-  // await places.add({
-  //   "name": "Casa Las Tirtugas",
-  //   "place": "Av Damero, Mexico",
-  //   "rating": 4.9,
-  //   "price": 120,
-  //   "description": "You will get a complete travel package on the beaches. Packages in the form of airline tickets, recommended Hotel rooms, Transportation, Have you ever been on holiday to the Greek ETC",
-  //   "users": [
-  //     {
-  //       "name": "Chris",
-  //       "comment" : "Great place",
-  //       "rating": 5.0,},
-  //     {
-  //       "name": "George",
-  //       "comment" : "",
-  //       "rating": 2.0,},
-  //
-  //     {
-  //       "name": "John",
-  //       "comment" : "Great place",
-  //       "rating": 4.0,},
-  //     {
-  //       "name": "Dimitris",
-  //       "comment" : "",
-  //       "rating": 3.5,},
-  //   ]
-  // });
-  // await places.add({
-  //   "name": "Rangauti Resort",
-  //   "place": "Sylhet, Airport Road",
-  //   "rating": 4.0,
-  //   "price": 150,
-  //   "description": "You will get a complete travel package on the beaches. Packages in the form of airline tickets, recommended Hotel rooms, Transportation, Have you ever been on holiday to the Greek ETC",
-  //   "users": [
-  //     {
-  //       "name": "Chris",
-  //       "comment" : "Great place",
-  //       "rating": 5.0,},
-  //     {
-  //       "name": "George",
-  //       "comment" : "",
-  //       "rating": 2.0,},
-  //
-  //     {
-  //       "name": "John",
-  //       "comment" : "Great place",
-  //       "rating": 4.0,},
-  //     {
-  //       "name": "Dimitris",
-  //       "comment" : "",
-  //       "rating": 3.5,},
-  //   ]
-  // });
+
 
 
   runApp(const DemoApp());
@@ -126,5 +75,115 @@ class DemoApp extends StatelessWidget {
   }
 }
 
+Future<void> addPlaces()async{
+  FirebaseFirestore db =  FirebaseFirestore.instance;
 
+  CollectionReference places = db.collection("places");
+  await places.add({
+    "name": "Casa Las Tirtugas",
+    "place": "Av Damero, Mexico",
+    "rating": 4.9,
+    "price": 120,
+    "description": "You will get a complete travel package on the beaches. Packages in the form of airline tickets, recommended Hotel rooms, Transportation, Have you ever been on holiday to the Greek ETC",
+    "users": [
+      {
+        "name": "Chris",
+        "comment" : "Great place",
+        "rating": 5.0,},
+      {
+        "name": "George",
+        "comment" : "",
+        "rating": 2.0,},
 
+      {
+        "name": "John",
+        "comment" : "Great place",
+        "rating": 4.0,},
+      {
+        "name": "Dimitris",
+        "comment" : "",
+        "rating": 3.5,},
+    ]
+  });
+  await places.add({
+    "name": "Rangauti Resort",
+    "place": "Sylhet, Airport Road",
+    "rating": 4.0,
+    "price": 150,
+    "description": "You will get a complete travel package on the beaches. Packages in the form of airline tickets, recommended Hotel rooms, Transportation, Have you ever been on holiday to the Greek ETC",
+    "users": [
+      {
+        "name": "Chris",
+        "comment" : "Great place",
+        "rating": 5.0,},
+      {
+        "name": "George",
+        "comment" : "",
+        "rating": 2.0,},
+
+      {
+        "name": "John",
+        "comment" : "Great place",
+        "rating": 4.0,},
+      {
+        "name": "Dimitris",
+        "comment" : "",
+        "rating": 3.5,},
+    ]
+  });
+
+}
+ Future<void>_addNotifications() async {
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  CollectionReference places = db.collection("notifications");
+  await places.add({
+    "title": "Welcome to Demo App",
+    "body": "Thank you for using our app. We hope you enjoy your experience!",
+    "date" : DateTime.now().toIso8601String(),
+    "read" : false,
+    "isAchieved": false,
+  }
+  );await places.add({
+    "title": "Welcome to Demo App",
+    "body": "Thank you for using our app. We hope you enjoy your experience!",
+    "date" : DateTime.now().toIso8601String(),
+    "read" : false,
+    "isAchieved": false,
+  }
+  );await places.add({
+    "title": "Welcome to Demo App",
+    "body": "Thank you for using our app. We hope you enjoy your experience!",
+    "date" : DateTime.now().toIso8601String(),
+    "read" : false,
+    "isAchieved": false,
+  }
+  );
+  await places.add({
+    "title": "Welcome to Earlier",
+    "body": "Thank you for using our app. We hope you enjoy your experience!",
+    "date" : DateTime.now().subtract(Duration(days: 1)).toIso8601String(),
+    "read" : false,
+    "isAchieved": false,
+  });
+
+  await places.add({
+    "title": "Welcome to Earlier",
+    "body": "Thank you for using our app. We hope you enjoy your experience!",
+    "date" : DateTime.now().subtract(Duration(days: 1)).toIso8601String(),
+    "read" : false,
+    "isAchieved": false,
+  });  await places.add({
+    "title": "Welcome to Earlier",
+    "body": "Thank you for using our app. We hope you enjoy your experience!",
+    "date" : DateTime.now().subtract(Duration(days: 1)).toIso8601String(),
+    "read" : false,
+    "isAchieved": false,
+  });  await places.add({
+    "title": "Welcome to Earlier",
+    "body": "Thank you for using our app. We hope you enjoy your experience!",
+    "date" : DateTime.now().subtract(Duration(days: 1)).toIso8601String(),
+    "read" : false,
+    "isAchieved": false,
+  });
+
+}

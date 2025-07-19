@@ -1,5 +1,6 @@
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo_app/data/data_models%20/user_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -25,30 +26,47 @@ class FirebaseAuthService {
     }
   }
 
-  /// Sign up with email and password
   Future<bool> signUpWithEmailUsernameAndPassword({
     required String email,
     required String password,
-    required String username
+    required String username,
   }) async {
-     try {
+    try {
       UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      await userCredential.user?.updateDisplayName(username);
 
-      await userCredential.user?.reload();
+      final User? user = userCredential.user;
 
-      User? updatedUser = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        Log.e("User is null after sign-up");
+        return false;
+      }
+      await user.updateDisplayName(username);
+      await user.reload();
+      final updatedUser = _firebaseAuth.currentUser;
       Log.i("Username: ${updatedUser?.displayName}");
+
+      // Αποθήκευση στο Firestore
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'uid': user.uid,
+        'email': email,
+        'name': username,
+        'createdAt': FieldValue.serverTimestamp(),
+        'profileImage': null,
+      });
 
       return true;
     } on FirebaseAuthException catch (e) {
       Log.e('Sign-up error: ${e.message}');
       return false;
+    } catch (e) {
+      Log.e('Unexpected error: $e');
+      return false;
     }
   }
+
 
   // Facebook Sign-In logic
   Future<UserCredential?> signInWithFacebook() async {

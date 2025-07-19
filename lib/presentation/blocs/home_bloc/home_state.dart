@@ -5,7 +5,8 @@ abstract class HomeState with _$HomeState {
 
   factory HomeState.initial() => HomeState(
     places: [],
-    avatarUrls: []
+    avatarUrls: [],
+    status: HomeStatus.initial,
   );
 
   const factory HomeState({
@@ -13,5 +14,6 @@ abstract class HomeState with _$HomeState {
     required List<PlacesModel> places,
     WeatherModel? weather,
     required List<String> avatarUrls ,
+    required HomeStatus status,
 }) = _Initial;
 }

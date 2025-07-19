@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../core/constants/fonts.dart';
 import '../../../core/utils/keys/asset_keys.dart';
 import '../../../routes/routes.dart';
+import '../../providers/home_status_enums.dart';
 import '../../widgets/destination_card.dart';
 
 class HomeView extends StatelessWidget {
@@ -17,13 +18,15 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<HomeBloc, HomeState>(
       listener: (context, state) async {
-        for (final url in state.places
-            .map((place) => place.imageUrl)
-            .where((url) => url != null)) {
-          await precacheImage(NetworkImage(url!), context);
-        }
-        for (final url in state.avatarUrls) {
-          await precacheImage(NetworkImage(url), context);
+        if(state.status == HomeStatus.initial){
+          for (final url in state.places
+              .map((place) => place.imageUrl)
+              .where((url) => url != null)) {
+            await precacheImage(NetworkImage(url!), context);
+          }
+          for (final url in state.avatarUrls) {
+            await precacheImage(NetworkImage(url), context);
+          }
         }
       },
       builder: (context, state) {
@@ -36,19 +39,18 @@ class HomeView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
+                      state.avatarUrls.isEmpty ? const SizedBox() : Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             color: Style.lightGrayColor),
                         child: Row(
                           children: [
                             CircleAvatar(
-                              // Replace with your avatar image
-                              // backgroundImage: NetworkImage('https://www.istockphoto.com/photo/eye-of-model-with-colorful-art-make-up-close-up-gm814423752-131755775'), // Placeholder image
-                              radius: 20,
-                              // Replace with your avatar image
-                              // backgroundImage: NetworkImage('https://www.istockphoto.com/photo/eye-of-model-with-colorful-art-make-up-close-up-gm814423752-131755775'), // Placeholder image
-                              child: Icon(Icons.person, color: Colors.white),
+                              radius: 23,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: NetworkImage(
+                              state.avatarUrls[0]), // Placeholder image
+
                             ),
                             const SizedBox(width: 8),
                             Text(
@@ -99,13 +101,14 @@ class HomeView extends StatelessWidget {
                               ],
                             ),
                           ),
-                          IconButton(
+                          state.authUser == null  ?const SizedBox() : IconButton(
                             icon: Icon(Icons.notifications_none,
                                 color: Colors.black),
                             onPressed: () {
                              Navigator.pushNamed(context, Routes.notifications,
                              arguments: {
                                "avatars" : state.avatarUrls,
+                               "userId" : state.authUser!.uid,
                              });
 
                             },

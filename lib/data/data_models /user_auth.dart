@@ -4,11 +4,13 @@ class AuthUser {
   final String? displayName;
   final String  email;
   final String? photoURL;
+  final String? uid;
 
   const AuthUser({
     this.displayName,
     required this.email,
     this.photoURL,
+    required this.uid,
   });
 
 
@@ -18,6 +20,7 @@ class AuthUser {
       displayName: user.displayName,
       email: user.email ?? '',
       photoURL: user.photoURL,
+      uid: user.uid,
     );
   }
 }

@@ -29,7 +29,9 @@ class Details extends StatelessWidget {
       if (state.view == DetailsView.bookMark) {
       } else if (state.view == DetailsView.back) {
         Navigator.pop(context);
-      } else if (state.view == DetailsView.bookNow) {}
+      } else if (state.view == DetailsView.bookNow) {
+
+      }
     }, builder: (context, state) {
       return Scaffold(
         body: CustomScrollView(

@@ -66,7 +66,7 @@ class RouteGenerator {
           builder: (_) => BlocProvider<NotificationsBloc>(
             create: (context) => NotificationsBloc(
               args: settings.arguments as Map<String, dynamic>,
-            ),
+            )..add(const NotificationsEvent.started()),
             child: NotificationsScreen(),
           ),);
       case Routes.dashboardScreen:
@@ -77,7 +77,8 @@ class RouteGenerator {
                   create: (context) => DashboardBloc(),
                 ),
                 BlocProvider<HomeBloc>(
-                  create: (context) => HomeBloc()..add(HomeEvent.started()),
+                  create: (context) => HomeBloc(
+                  )..add(HomeEvent.started()),
                 ),
               ],
                 child: const Dashboard(),

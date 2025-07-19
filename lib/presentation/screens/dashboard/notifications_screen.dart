@@ -4,16 +4,12 @@ import 'package:demo_app/core/constants/fonts.dart';
 import 'package:demo_app/presentation/widgets/common_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
+import '../../../core/constants/style.dart';
 import '../../blocs/notifications_bloc/notifications_bloc.dart';
 
-
-class NotificationsScreen extends StatefulWidget {
-  @override
-  _NotificationsScreenState createState() => _NotificationsScreenState();
-}
-
-class _NotificationsScreenState extends State<NotificationsScreen> {
+class NotificationsScreen extends StatelessWidget {
   final List<Map<String, String>> notifications = [
     {
       'avatar': 'https://placehold.co/50x50/ADD8E6/000000?text=P1',
@@ -54,12 +50,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     },
   ];
 
-  int _selectedTabIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<NotificationsBloc, NotificationsState>(
-      listener: (context, state) async{
+      listener: (context, state) async {
         for (final url in state.avatarUrls) {
           await precacheImage(NetworkImage(url), context);
         }
@@ -67,37 +61,37 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       builder: (context, state) {
         return Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-         
           body: SafeArea(
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 11,
-                  vertical: 8.0),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
                   child: Row(
+                    mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CommonBackButton(
-                        onTap: (){
+                        onTap: () {
                           Navigator.pop(context);
                         },
                       ),
-                      Text(
-                        'Notifications',
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          fontSize: 20,
-                          fontFamily: Fonts.sfUI,
-                          fontWeight: FontWeight.bold,
-                        )
-                      ),
-
+                      const SizedBox(width: 10),
+                      Text('Notifications',
+                          style:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                    fontSize: 20,
+                                    fontFamily: Fonts.sfUI,
+                                    fontWeight: FontWeight.bold,
+                                  )),
                       TextButton(
-                        onPressed: () {
-                          // Handle "Clear all" action
-                        },
+                        onPressed: () => context.read<NotificationsBloc>().add(
+                              NotificationsEvent.clearAll(),
+                            ),
                         child: Text(
                           'Clear all',
-                          style: TextStyle(color: Colors.orange[700], fontSize: 16),
+                          style: TextStyle(
+                              color: Colors.orange[700], fontSize: 16),
                         ),
                       ),
                     ],
@@ -109,26 +103,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildTabButton(0, 'Recent'),
-                      _buildTabButton(1, 'Earlier'),
-                      _buildTabButton(2, 'Archived'),
+                      _buildTabButton(0, 'Recent', state, context),
+                      _buildTabButton(1, 'Earlier', state, context),
+                      _buildTabButton(2, 'Archived', state, context),
                     ],
                   ),
                 ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: notifications.map((notification) {
-                        return _buildNotificationItem(
-                          state.avatarUrls[Random().nextInt(state.avatarUrls.length)],
-                          notification['title']!,
-                          notification['subtitle']!,
-                          notification['time']!,
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
+                _buildList(context, state),
               ],
             ),
           ),
@@ -137,13 +118,61 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     );
   }
 
-  Widget _buildTabButton(int index, String text) {
-    final bool isSelected = _selectedTabIndex == index;
+  Widget _buildList(BuildContext context, NotificationsState state) {
+    if (context
+            .read<NotificationsBloc>()
+            .getNotifications(state.selectedIndex) !=
+        null) {
+      if (context
+          .read<NotificationsBloc>()
+          .getNotifications(state.selectedIndex)!
+          .isEmpty) {
+        return Expanded(
+          child: Center(
+            child: Text(
+              'No notifications',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    fontSize: 16,
+                    fontFamily: Fonts.sfUI,
+                    fontWeight: FontWeight.w500,
+                  ),
+            ),
+          ),
+        );
+      } else {
+        return Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: context
+                  .read<NotificationsBloc>()
+                  .getNotifications(state.selectedIndex)!
+                  .map((notification) {
+                return _buildNotificationItem(
+                    state.avatarUrls[Random().nextInt(state.avatarUrls.length)],
+                    notification.title ?? "",
+                    notification.body ?? "",
+                    DateFormat('EEE dd, MMM HH:mm').format(
+                      DateTime.parse(notification.date!),
+                    ),
+                    context);
+              }).toList(),
+            ),
+          ),
+        );
+      }
+    } else {
+      return const SizedBox();
+    }
+  }
+
+  Widget _buildTabButton(
+      int index, String text, NotificationsState state, BuildContext context) {
+    final bool isSelected = state.selectedIndex == index;
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _selectedTabIndex = index;
-        });
+        context.read<NotificationsBloc>().add(
+              NotificationsEvent.selectCategory(index),
+            );
       },
       child: Column(
         children: [
@@ -151,28 +180,22 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             text,
             style: TextStyle(
               fontSize: 16,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              color: isSelected ? Colors.orange[700] : Colors.grey,
+              fontFamily: Fonts.sfUI,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+              color: isSelected ? Colors.orange[700] : Style.lightTextColor,
             ),
           ),
-          if (isSelected)
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              height: 3,
-              width: 30, // Adjust width as needed for the underline
-              color: Colors.orange[700],
-            ),
         ],
       ),
     );
   }
 
   Widget _buildNotificationItem(String avatarUrl, String title, String subtitle,
-      String time) {
+      String time, BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       // No shadow
-      color:  Colors.white.withValues(alpha: 0.97),
+      color: Colors.white.withValues(alpha: 0.97),
       // _selectedTabIndex == 0 && notifications.indexOf(
       //     notifications.firstWhere((element) =>
       //     element['avatar'] ==
@@ -186,8 +209,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           children: [
             CircleAvatar(
               radius: 25,
-              backgroundImage: NetworkImage(
-                  avatarUrl), // Use NetworkImage for URL
+              backgroundImage:
+                  NetworkImage(avatarUrl), // Use NetworkImage for URL
             ),
             const SizedBox(width: 15),
             Expanded(
@@ -197,20 +220,19 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   Text(
                     title,
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontSize: 18,
-                      fontFamily: Fonts.sfUI,
-                      fontWeight: FontWeight.w500,
-                  ),
+                          fontSize: 18,
+                          fontFamily: Fonts.sfUI,
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontSize: 14,
-                      fontFamily: Fonts.sfUI,
-                      fontWeight: FontWeight.w500,
-
-                    ),
+                          fontSize: 14,
+                          fontFamily: Fonts.sfUI,
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                 ],
               ),
@@ -218,11 +240,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             Text(
               time,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                fontSize: 11,
-                fontFamily: Fonts.sfUI,
-                fontWeight: FontWeight.w400,
-
-              ),
+                    fontSize: 11,
+                    fontFamily: Fonts.sfUI,
+                    fontWeight: FontWeight.w400,
+                  ),
             ),
           ],
         ),

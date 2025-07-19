@@ -26,19 +26,36 @@ class FirebaseService {
     FirebaseMessaging.onMessageOpenedApp
         .listen((RemoteMessage message) async {
       Log.i("Message clicked!");
+
     });
   }
 
-  Future<void> handleKilledAppNotifications(RemoteMessage message) async {}
-
-  firebaseOnMessage(RemoteMessage message) async {
+  Future<void> handleKilledAppNotifications(RemoteMessage message) async {
     FirebaseFirestore db =  FirebaseFirestore.instance;
-
     CollectionReference places = db.collection("notifications");
     await places.add({
       "title": message.notification!.title!,
       "body": message.notification!.body!,
       "date" : DateTime.now().toIso8601String(),
+      "read" : false,
+      "isAchieved": false,
+    });
+    notificationPlugin.showNotification(
+        12345,
+        message.notification!.title!,
+        message.notification!.body!,
+        "local_notification_payload_play_only_foreground");
+  }
+
+  firebaseOnMessage(RemoteMessage message) async {
+    FirebaseFirestore db =  FirebaseFirestore.instance;
+    CollectionReference places = db.collection("notifications");
+    await places.add({
+      "title": message.notification!.title!,
+      "body": message.notification!.body!,
+      "date" : DateTime.now().toIso8601String(),
+      "read" : false,
+      "isAchieved": false,
     });
     notificationPlugin.showNotification(
         12345,
@@ -49,4 +66,20 @@ class FirebaseService {
 }
 
 @pragma('vm:entry-point')
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  FirebaseFirestore db =  FirebaseFirestore.instance;
+  CollectionReference places = db.collection("notifications");
+  await places.add({
+    "title": message.notification!.title!,
+    "body": message.notification!.body!,
+    "date" : DateTime.now().toIso8601String(),
+    "read" : false,
+    "isAchieved": false,
+  });
+  notificationPlugin.showNotification(
+      12345,
+      message.notification!.title!,
+      message.notification!.body!,
+      "local_notification_payload_play_only_foreground");
+
+}
