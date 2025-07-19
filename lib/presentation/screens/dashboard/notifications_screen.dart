@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:demo_app/core/constants/fonts.dart';
 import 'package:demo_app/presentation/widgets/common_back_button.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +59,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<NotificationsBloc, NotificationsState>(
-      listener: (context, state) {
+      listener: (context, state) async{
+        for (final url in state.avatarUrls) {
+          await precacheImage(NetworkImage(url), context);
+        }
       },
       builder: (context, state) {
         return Scaffold(
@@ -115,7 +120,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     child: Column(
                       children: notifications.map((notification) {
                         return _buildNotificationItem(
-                          notification['avatar']!,
+                          state.avatarUrls[Random().nextInt(state.avatarUrls.length)],
                           notification['title']!,
                           notification['subtitle']!,
                           notification['time']!,
@@ -164,18 +169,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   Widget _buildNotificationItem(String avatarUrl, String title, String subtitle,
       String time) {
-    return Card(
+    return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
-
-      elevation: 0,
       // No shadow
-      color: _selectedTabIndex == 0 && notifications.indexOf(
-          notifications.firstWhere((element) =>
-          element['avatar'] ==
-              avatarUrl)) == 0
-          ? Colors.blue.withValues(
-          alpha: 0.1) // Light blue for the first item in "Recent"
-          : Colors.white.withValues(alpha: 0.97),
+      color:  Colors.white.withValues(alpha: 0.97),
+      // _selectedTabIndex == 0 && notifications.indexOf(
+      //     notifications.firstWhere((element) =>
+      //     element['avatar'] ==
+      //         avatarUrl)) == 0
+      //     ? Colors.blue.withValues(
+      //     alpha: 0.1) // Light blue for the first item in "Recent"
+      //     : Colors.white.withValues(alpha: 0.97),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Row(

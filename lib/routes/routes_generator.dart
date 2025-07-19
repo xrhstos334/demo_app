@@ -64,7 +64,9 @@ class RouteGenerator {
       case Routes.notifications:
         return MaterialPageRoute(
           builder: (_) => BlocProvider<NotificationsBloc>(
-            create: (context) => NotificationsBloc(),
+            create: (context) => NotificationsBloc(
+              args: settings.arguments as Map<String, dynamic>,
+            ),
             child: NotificationsScreen(),
           ),);
       case Routes.dashboardScreen:

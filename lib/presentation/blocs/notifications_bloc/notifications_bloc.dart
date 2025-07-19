@@ -6,7 +6,10 @@ part 'notifications_state.dart';
 part 'notifications_bloc.freezed.dart';
 
 class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
-  NotificationsBloc() : super( NotificationsState.initial()) {
+  final Map<String , dynamic> args;
+  NotificationsBloc({
+    required this.args
+}) : super( NotificationsState.initial(args)) {
     on<NotificationsEvent>((event, emit) {
       // TODO: implement event handler
     });

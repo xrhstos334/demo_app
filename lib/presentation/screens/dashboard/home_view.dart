@@ -103,7 +103,10 @@ class HomeView extends StatelessWidget {
                             icon: Icon(Icons.notifications_none,
                                 color: Colors.black),
                             onPressed: () {
-                             Navigator.pushNamed(context, Routes.notifications);
+                             Navigator.pushNamed(context, Routes.notifications,
+                             arguments: {
+                               "avatars" : state.avatarUrls,
+                             });
 
                             },
                           ),

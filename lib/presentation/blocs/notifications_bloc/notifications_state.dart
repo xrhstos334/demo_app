@@ -2,5 +2,11 @@ part of 'notifications_bloc.dart';
 
 @freezed
 abstract class NotificationsState with _$NotificationsState {
-  const factory NotificationsState.initial() = _initial;
+  factory NotificationsState.initial(args)=> NotificationsState(
+    avatarUrls: args["avatars"] as List<String>,
+  );
+
+  const factory NotificationsState({
+    required List<String> avatarUrls,
+  }) = _initial;
 }
