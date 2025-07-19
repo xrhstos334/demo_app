@@ -8,13 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-const String darwinNotificationCategoryPlain = 'plainCategory';
-
-const String darwinNotificationCategoryText = 'textCategory';
-
-String title = "";
-String description = "";
-
 
 class LocalNotifications {
   static final FlutterLocalNotificationsPlugin _flp =
@@ -58,102 +51,12 @@ class LocalNotifications {
     await flp.cancelAll();
   }
 
-  void setTitle(String titleNotification) {
-    title = titleNotification;
-  }
-
-  static String getTitle() {
-    return title;
-  }
-
-  void setDescription(String descriptionNotification) {
-    description = descriptionNotification;
-  }
-
-  static String getDescription() {
-    return description;
-  }
 
   Future<void> cancelNotification(int notificationId) async {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
     await flutterLocalNotificationsPlugin.cancel(notificationId);
-  }
-
-  Future<void> scheduleNotification(tz.TZDateTime time, int id, String title,
-      String body, String payload) async {
-    var androidChannelSpecifics = AndroidNotificationDetails(
-        "CHANNEL_ID", "CHANNEL_NAME",
-        channelDescription: "CHANNEL_DESCRIPTION",
-        enableLights: true,
-        color: Color(0xffFFFFFF),
-        ledColor: Color(0xffFFFFFF),
-        ledOnMs: 1000,
-        ledOffMs: 5000,
-        importance: Importance.max,
-        priority: Priority.high,
-        styleInformation: BigTextStyleInformation(body));
-    var iosChannelSpecifics = const DarwinNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(
-      android: androidChannelSpecifics,
-      iOS: iosChannelSpecifics,
-    );
-    if (Platform.isAndroid) {
-      await flp.zonedSchedule(
-        id,
-        title,
-        body,
-        time,
-        platformChannelSpecifics,
-        // androidAllowWhileIdle: true,
-        androidScheduleMode: AndroidScheduleMode.alarmClock,
-        uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.wallClockTime,
-        payload: payload,
-      );
-    }
-  }
-
-  Future<void> scheduleNotificationWithAction(tz.TZDateTime time, int id,
-      String title, String body, String payload, String actionTitle) async {
-    var androidChannelSpecifics =
-    AndroidNotificationDetails("CHANNEL_ID", "CHANNEL_NAME",
-        channelDescription: "CHANNEL_DESCRIPTION",
-        enableLights: true,
-        //icon: 'ic_launcher_foreground',
-        color: const Color(0xff083A4D),
-        ledColor: const Color(0xffEA4C4B),
-        ledOnMs: 1000,
-        ledOffMs: 5000,
-        importance: Importance.max,
-        priority: Priority.high,
-        actions: <AndroidNotificationAction>[
-          AndroidNotificationAction(
-            "5",
-            actionTitle,
-            icon: const DrawableResourceAndroidBitmap('ic_launcher_foreground'),
-            contextual: true,
-          ),
-        ]);
-    DarwinNotificationDetails iosNotificationDetails =
-    DarwinNotificationDetails(
-      categoryIdentifier: darwinNotificationCategoryPlain,
-    );
-    var platformChannelSpecifics = NotificationDetails(
-        android: androidChannelSpecifics, iOS: iosNotificationDetails);
-    await flp.zonedSchedule(
-      id,
-      title,
-      body,
-      time,
-      platformChannelSpecifics,
-      // androidAllowWhileIdle: true,
-      androidScheduleMode: AndroidScheduleMode.alarmClock,
-      uiLocalNotificationDateInterpretation:
-      UILocalNotificationDateInterpretation.wallClockTime,
-      payload: payload,
-    );
   }
 
   showNotification(
